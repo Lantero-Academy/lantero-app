@@ -1,0 +1,15 @@
+{
+  "name": "Lantero — Family Learning Planner",
+  "short_name": "Lantero",
+  "description": "A private, on-device planner for parent-led family learning. Warm light on old paper.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F6EFE3",
+  "theme_color": "#1F2A44",
+  "icons": [
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

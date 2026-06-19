@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lantero — Family Learning Planner</title>
+<meta name="description" content="A private, on-device planner for parent-led family learning.">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1F2A44">
+<link rel="icon" href="icons/icon-512.png">
+<link rel="apple-touch-icon" href="icons/icon-512.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Lantero">
+<style>
+  /* Lantero Design System v2 tokens — see "Lantero Design System/tokens/" */
+  @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Young+Serif&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400;1,8..60,600&family=Space+Mono:ital,wght@0,400;0,700&display=swap');
+  :root{
+    --parchment:#F6EFE3; --parchment-deep:#EFE5D2; --ink:#2B2620; --navy:#1F2A44;
+    --navy-soft:#33415F; --amber:#E8A13D; --amber-deep:#C97F1D; --amber-glow:#F7C873;
+    --green:#5F8C5A; --red:#B85C45; --dim:#8D94A8; --card:#FFFDF8; --line:#DCCFB4;
+    --font-display:'Bricolage Grotesque','Public Sans',system-ui,sans-serif;
+    --font-ceremony:'Young Serif',Georgia,'Times New Roman',serif;
+    --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
+    --font-mono:'Space Mono',ui-monospace,Menlo,monospace;
+    --tracking-label:0.08em; --tracking-seal:0.18em;
+    --shadow-1:0 1px 2px rgba(43,38,32,.08); --shadow-2:0 4px 14px rgba(43,38,32,.08);
+    --ease-out:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:var(--font-body); background:var(--parchment); color:var(--ink); line-height:1.45;}
+  :focus-visible{outline:2px solid var(--amber-deep); outline-offset:2px; border-radius:4px;}
+  header{background:var(--navy); color:var(--parchment); padding:10px 20px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; row-gap:6px;}
+  header .lamp svg{width:30px; height:35px; display:block;}
+  header h1{font-family:var(--font-display); font-size:18px; letter-spacing:var(--tracking-seal); font-weight:600; color:var(--parchment);}
+  header .who{margin-left:auto; font-size:13px; opacity:.85; font-family:var(--font-display);}
+  .brand{display:flex; align-items:center; gap:12px; cursor:pointer; background:none; border:none; color:inherit; padding:0; font:inherit; text-align:left;}
+  .fb-btn{margin-left:10px; background:none; border:1px solid var(--amber); color:var(--amber-glow); border-radius:6px; padding:5px 10px; font-family:var(--font-display); font-size:12px; font-weight:600; letter-spacing:var(--tracking-label); cursor:pointer;}
+  .fb-btn:hover{background:var(--navy-soft);}
+  nav{display:flex; flex-wrap:wrap; gap:2px; background:var(--navy-soft); padding:0 12px;}
+  nav button{background:none; border:none; color:var(--parchment); padding:10px 14px; font-family:var(--font-display); font-size:13.5px; font-weight:500; letter-spacing:var(--tracking-label); cursor:pointer; border-bottom:3px solid transparent; transition:color 200ms var(--ease-out);}
+  nav button.active{border-bottom-color:var(--amber); color:var(--amber-glow);}
+  nav button:hover{color:var(--amber-glow);}
+  main{max-width:1000px; margin:0 auto; padding:20px;}
+  h2{font-family:var(--font-ceremony); font-size:22px; color:var(--navy); margin-bottom:10px; font-weight:normal;}
+  h3{font-family:var(--font-display); font-size:15px; font-weight:600; color:var(--navy); margin:14px 0 6px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:14px 16px; margin-bottom:14px; box-shadow:var(--shadow-1);}
+  .muted{color:#6f6757; font-size:13px;}
+  .num{font-family:var(--font-mono); font-size:.92em;}
+  .small{font-size:12.5px;}
+  .row{display:flex; flex-wrap:wrap; gap:12px;}
+  .col{flex:1; min-width:260px;}
+  button.btn{background:var(--navy); color:var(--parchment); border:none; border-radius:6px; padding:8px 14px; font-family:var(--font-display); font-weight:600; font-size:14px; cursor:pointer; transition:background 200ms var(--ease-out);}
+  button.btn:hover{background:var(--navy-soft);}
+  button.btn.amber{background:var(--amber); color:var(--ink);}
+  button.btn.amber:hover{background:var(--amber-glow);}
+  button.btn.ghost{background:none; color:var(--navy); border:1px solid var(--navy); font-weight:500;}
+  button.btn.sm{padding:4px 10px; font-size:12.5px;}
+  input[type=text],input[type=number],input[type=date],select,textarea{
+    font-family:var(--font-body); font-size:14px; padding:7px 9px; border:1px solid var(--line);
+    border-radius:6px; background:#fff; color:var(--ink); width:100%;}
+  textarea{min-height:64px;}
+  label{font-family:var(--font-display); font-size:12.5px; font-weight:500; letter-spacing:var(--tracking-label); color:var(--navy); display:block; margin:8px 0 3px;}
+  .chips{display:flex; flex-wrap:wrap; gap:6px; margin:6px 0;}
+  .chip{border:1px solid var(--line); background:#fff; border-radius:16px; padding:5px 12px; font-family:var(--font-display); font-size:13px; cursor:pointer; user-select:none; transition:all 150ms var(--ease-out);}
+  .chip.on{background:var(--amber-glow); border-color:var(--amber-deep);}
+  .pill{display:inline-block; border-radius:10px; padding:2px 9px; font-family:var(--font-display); font-size:11px; font-weight:500; color:#fff;}
+  .pill.core{background:var(--navy-soft);} .pill.life{background:var(--amber-deep);} .pill.enrich{background:var(--green);}
+  .flag{border-left:4px solid var(--amber-deep); background:var(--parchment-deep); padding:8px 12px; border-radius:0 6px 6px 0; margin:6px 0; font-size:13.5px;}
+  .flag.bad{border-left-color:var(--red);} .flag.good{border-left-color:var(--green);}
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  th,td{text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top;}
+  th{font-family:var(--font-display); color:var(--navy); font-weight:500; font-size:11.5px; text-transform:uppercase; letter-spacing:var(--tracking-label);}
+  .mission{border:1px solid var(--line); border-radius:8px; padding:12px 14px; margin:8px 0; background:var(--card); box-shadow:var(--shadow-1);}
+  .mission h4{font-family:var(--font-ceremony); color:var(--navy); font-size:16.5px; font-weight:normal; margin-bottom:4px;}
+  .mission .hook{font-style:italic; margin:4px 0;}
+  .scene{margin:6px 0;}
+  .scene-stage{margin:2px 0 6px;}
+  .mission .meta{font-family:var(--font-display); font-size:11.5px; color:#6f6757; margin-bottom:6px;}
+  .mission.done{opacity:.78; border-left:4px solid var(--green);}
+  .mission.skipped{opacity:.6;}
+  .scroll-seal{font-family:var(--font-display); font-size:10.5px; font-weight:600; color:var(--amber-deep); letter-spacing:var(--tracking-seal); text-transform:uppercase;}
+  /* v2 charted-route progress (replaces the filled bar) */
+  .route{display:block; max-width:340px; width:100%; height:auto; margin:8px 0 2px;}
+  /* v2 level dots — parent-side proficiency */
+  .ldots{display:inline-flex; gap:4px; vertical-align:middle;}
+  .ldot{width:9px; height:9px; border-radius:50%; border:1px solid var(--line); background:transparent;}
+  .ldot.on{background:var(--amber-glow); border-color:var(--amber-deep);}
+  /* proficiency state markers — worded, not glyphs */
+  .mk{font-family:var(--font-display); font-size:11.5px; font-weight:500; letter-spacing:.02em; margin-left:6px;}
+  .mk.wob{color:var(--red);} .mk.rdy{color:var(--green);}
+  /* curiosity "new territory" tag with the brand star */
+  .newterr{font-family:var(--font-mono); font-size:10.5px; letter-spacing:.04em; color:var(--amber-deep); white-space:nowrap;}
+  .star4{width:11px; height:11px; display:inline-block; vertical-align:-1px;}
+  .grid7{display:grid; grid-template-columns:repeat(7,1fr); gap:6px;}
+  .daycell{border:1px solid var(--line); border-radius:6px; background:var(--card); padding:6px; min-height:84px; font-size:12px;}
+  .daycell .dnum{color:var(--navy); font-size:12px;}
+  .daycell.today{outline:2px solid var(--amber);}
+  .daycell.off{opacity:.45;}
+  .mday{display:flex; align-items:center; gap:4px; font-size:10.5px; color:var(--ink); line-height:1.5;}
+  .mday .mdlabel{white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .dot{display:inline-block; width:8px; height:8px; border-radius:50%; margin:1px;}
+  .modal-back{position:fixed; inset:0; background:rgba(31,42,68,.55); display:none; align-items:flex-start; justify-content:center; overflow:auto; padding:30px 10px; z-index:50;}
+  .modal-back.open{display:flex;}
+  .modal{background:var(--card); border-radius:10px; max-width:640px; width:100%; padding:20px 22px; border:1px solid var(--line);}
+  .steps{font-family:var(--font-display); font-size:11px; font-weight:600; color:var(--amber-deep); letter-spacing:var(--tracking-seal); text-transform:uppercase; margin-bottom:6px;}
+  .lvl{display:flex; gap:4px;}
+  .lvl button{width:30px; height:30px; border-radius:50%; border:1px solid var(--line); background:#fff; cursor:pointer; font-family:inherit;}
+  .lvl button.on{background:var(--amber-glow); border-color:var(--amber-deep);}
+  .legend{display:flex; gap:14px; flex-wrap:wrap; font-size:12px; margin-top:8px;}
+  .legend span{display:flex; align-items:center; gap:5px;}
+  .sw{width:13px; height:13px; border-radius:3px; display:inline-block;}
+  /* ---- phone layout (A0.1 calendars / A0.2 tables & modals) ---- */
+  @media (max-width:560px){
+    main{padding:14px;}
+    header{padding:10px 14px;}
+    header h1{font-size:16px;}
+    nav button{padding:9px 11px; font-size:13px;}
+    .row .col{min-width:0; flex-basis:100%;}
+    /* Week: stack the seven days into one readable column */
+    .grid7.week7{grid-template-columns:1fr;}
+    .grid7.week7 .daycell{min-height:0;}
+    /* Month: keep the grid, compact to dots-only */
+    .grid7.month7{gap:3px;}
+    .grid7.month7 .daycell{min-height:46px; padding:3px; font-size:10px;}
+    .grid7.month7 .daycell .dnum{font-size:10px;}
+    th,td{padding:5px 6px;}
+    .lvl{flex-wrap:wrap;}
+    .modal-back{padding:16px 8px;}
+    .grid7.month7 .mday{display:inline-flex; margin:0 3px 0 0;}
+    .grid7.month7 .mday .mdlabel{display:none;}
+  }
+  @media print{
+    body *{visibility:hidden;}
+    #printArea, #printArea *{visibility:visible;}
+    #printArea{position:absolute; left:0; top:0; width:100%; padding:30px; font-size:14px;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <span class="brand" onclick="go('today')" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();go('today');}" title="Back to Today" aria-label="Lantero — go to Today">
+  <span class="lamp"><svg viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lantero mark"><g stroke="#E8A13D" stroke-width="2" stroke-linecap="round"><line x1="60" y1="118" x2="60" y2="126"/><line x1="89" y1="106" x2="94.6" y2="111.6"/><line x1="101" y1="77" x2="109" y2="77"/><line x1="89" y1="48" x2="94.6" y2="42.4"/><line x1="31" y1="48" x2="25.4" y2="42.4"/><line x1="19" y1="77" x2="11" y2="77"/><line x1="31" y1="106" x2="25.4" y2="111.6"/></g><circle cx="60" cy="20" r="8" stroke="#F6EFE3" stroke-width="3.5"/><path d="M52 36 L54 29 H66 L68 36 Z" fill="#F6EFE3"/><path d="M46 36 H74" stroke="#F6EFE3" stroke-width="3.5" stroke-linecap="round"/><path d="M48 36 L72 36 L80 48 L80 100 Q80 106 74 106 L46 106 Q40 106 40 100 L40 48 Z" stroke="#F6EFE3" stroke-width="3.5" stroke-linejoin="round" fill="none"/><path d="M60 54 L64.2 67.8 L78 72 L64.2 76.2 L60 90 L55.8 76.2 L42 72 L55.8 67.8 Z" fill="#F7C873"/><path d="M34 118 H86" stroke="#F6EFE3" stroke-width="3.5" stroke-linecap="round"/></svg></span>
+  <h1>LANTERO <span class="small" style="opacity:.7; letter-spacing:normal; font-weight:400">&middot; the map room</span></h1>
+  </span>
+  <span class="who" id="hdrWho"></span>
+  <button class="fb-btn" onclick="openFeedback()" title="Send feedback to the maker">Send feedback</button>
+</header>
+<nav id="nav"></nav>
+<main id="view"></main>
+<div class="modal-back" id="modalBack"><div class="modal" id="modalBox"></div></div>
+<div id="printArea" style="display:none"></div>
+
+<script>
+"use strict";
+/* ================= UTILITIES ================= */
+function $(id){return document.getElementById(id);}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+function uid(){return Math.random().toString(36).slice(2,10);}
+function todayYMD(){return toYMD(new Date());}
+function toYMD(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function fromYMD(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
+function addDays(s,n){var d=fromYMD(s);d.setDate(d.getDate()+n);return toYMD(d);}
+function weekStart(s){var d=fromYMD(s);var dow=(d.getDay()+6)%7;d.setDate(d.getDate()-dow);return toYMD(d);}
+function monthName(m){return ["January","February","March","April","May","June","July","August","September","October","November","December"][m];}
+function fmtDate(s){var d=fromYMD(s);return monthName(d.getMonth())+" "+d.getDate();}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x));}
+
+/* ================= V2 MOTIFS ================= */
+/* Brand four-point star — curiosity "new territory" tag and route waypoint. */
+var STAR4='<svg class="star4" viewBox="-8 -8 16 16" aria-hidden="true"><path d="M0 -7 L2.4 -2.4 L7 0 L2.4 2.4 L0 7 L-2.4 2.4 L-7 0 L-2.4 -2.4 Z" fill="var(--amber-deep)"/></svg>';
+/* Charted-route progress: dotted hairline path; lit waypoints = mission-days
+   travelled; the star destination lights when the week's target is reached.
+   Progress is route travelled, never a bar filled. */
+function routeProgressSVG(done,target){
+  target=Math.max(1,target|0); done=clamp(done|0,0,target);
+  var W=320,H=46,padL=14,xEnd=W-24,y=23,lastDot=xEnd-22;
+  var step=(target>1)?(lastDot-padL)/(target-1):0;
+  function dx(i){return padL+i*step;}
+  var s='<svg class="route" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+done+' of '+target+' mission-days travelled this week">';
+  s+='<line x1="'+padL+'" y1="'+y+'" x2="'+xEnd+'" y2="'+y+'" stroke="var(--line)" stroke-width="1.6" stroke-dasharray="1 7" stroke-linecap="round"/>';
+  var tEnd=done<=0?padL:(done>=target?xEnd:dx(done-1));
+  if(done>0) s+='<line x1="'+padL+'" y1="'+y+'" x2="'+tEnd.toFixed(1)+'" y2="'+y+'" stroke="var(--amber-deep)" stroke-width="1.6" stroke-linecap="round"/>';
+  for(var i=0;i<target;i++){
+    var lit=i<done;
+    s+='<circle cx="'+dx(i).toFixed(1)+'" cy="'+y+'" r="'+(lit?3.2:2.4)+'" fill="'+(lit?'var(--amber)':'var(--dim)')+'"'+(lit?'':' opacity="0.55"')+'/>';
+  }
+  var reached=done>=target;
+  s+='<path transform="translate('+xEnd+','+y+')" d="M0 -8 L2.8 -2.8 L8 0 L2.8 2.8 L0 8 L-2.8 2.8 L-8 0 L-2.8 -2.8 Z" fill="'+(reached?'var(--amber)':'none')+'" stroke="'+(reached?'none':'var(--dim)')+'" stroke-width="1.4" stroke-linejoin="round"'+(reached?'':' opacity="0.7"')+'/>';
+  return s+'</svg>';
+}
+/* Parent-side proficiency level dots (1–5); never shown to the child. */
+function levelDots(level){
+  var s='<span class="ldots" role="img" aria-label="level '+level+' of 5">';
+  for(var i=1;i<=5;i++) s+='<span class="ldot'+(i<=level?' on':'')+'"></span>';
+  return s+'</span>';
+}
+
+/* ================= SUBJECTS ================= */
+var SUBJECTS=[
+  {id:"reading",   name:"Reading",                grp:"core",  hs:13, sum:13},
+  {id:"writing",   name:"Writing & Spelling",     grp:"core",  hs:9,  sum:6},
+  {id:"math",      name:"Math",                   grp:"core",  hs:13, sum:11},
+  {id:"science",   name:"Science",                grp:"core",  hs:9,  sum:9},
+  {id:"social",    name:"Social Studies & History",grp:"core", hs:7,  sum:5},
+  {id:"geography", name:"Geography & Maps",       grp:"core",  hs:4,  sum:4},
+  {id:"civics",    name:"Civics & Citizenship",   grp:"core",  hs:3,  sum:2},
+  {id:"health",    name:"Health & Safety",        grp:"core",  hs:4,  sum:4},
+  {id:"pe",        name:"Physical Education",     grp:"enrich",hs:8,  sum:11},
+  {id:"art",       name:"Art",                    grp:"enrich",hs:5,  sum:7},
+  {id:"music",     name:"Music",                  grp:"enrich",hs:3,  sum:4},
+  {id:"spanish",   name:"Spanish",                grp:"enrich",hs:6,  sum:6},
+  {id:"speaking",  name:"Public Speaking",        grp:"life",  hs:3,  sum:3},
+  {id:"conflict",  name:"Conflict Resolution",    grp:"life",  hs:2,  sum:3},
+  {id:"courage",   name:"Courage & Confidence",   grp:"life",  hs:4,  sum:5},
+  {id:"finlit",    name:"Financial Literacy",     grp:"life",  hs:3,  sum:3},
+  {id:"entrep",    name:"Entrepreneurship",       grp:"life",  hs:2,  sum:2},
+  {id:"thinking",  name:"Independent Thinking",   grp:"life",  hs:2,  sum:2}
+];
+function subj(id){for(var i=0;i<SUBJECTS.length;i++)if(SUBJECTS[i].id===id)return SUBJECTS[i];return null;}
+var CURIOSITY=["volcanoes","the deep ocean","ancient Egypt","robots","birds of prey","weather and storms","castles and knights","insects","bridges and tunnels","planets we have never visited","whales","deserts","rainforests","how machines work","famous explorers","music from around the world","caves and crystals","trains","lighthouses","maps of the old world"];
+
+/* ================= STATE ================= */
+var KEY="lantero_v1";
+var SCHEMA_VERSION=1;
+var S=null;
+var loadError=false; /* set true when a saved blob exists but couldn't be parsed */
+function defaultState(){
+  return {
+    version:1, onboarded:false,
+    profile:{childName:"",heroName:"",age:6,parentName:"",usState:"South Carolina",
+      mode:"summer", /* homeschool | summer | afterschool */
+      interests:[], /* {id,name,weight,uses} */
+      prefs:{sessionMin:20,formats:[],bestTime:"morning",screens:"low"},
+      lifePriorities:[], notes:""},
+    prof:{}, /* subjectId -> {level:1-5, struggle:0, advance:0} */
+    targets:{}, /* subjectId -> weight */
+    schedule:{daysPerWeek:5, dailyMin:60, offDays:[0,6]}, /* offDays: JS getDay() numbers */
+    missions:[], /* see spec */
+    weekPlans:{}, /* weekStartYMD -> {note, targetCount} */
+    monthPlans:{}, /* "YYYY-MM" -> {note} */
+    quarters:[], /* {id,name,start,end,goals} */
+    pulse:[], /* {week, willing:1-5, parentEnergy:1-5, note} */
+    extraLog:[] /* {date, minutes, subject, note} manual entries */
+  };
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+/* Forward-compatible: merge a loaded blob onto current defaults so a blob from an
+   older (or newer) build never crashes on a missing key. Version hook for Phase B. */
+function migrate(state){
+  if(!state||typeof state!=="object") return defaultState();
+  var base=defaultState();
+  for(var k in base){ if(!(k in state)) state[k]=base[k]; }
+  state.profile=Object.assign({}, base.profile, state.profile||{});
+  state.profile.prefs=Object.assign({}, base.profile.prefs, (state.profile&&state.profile.prefs)||{});
+  state.schedule=Object.assign({}, base.schedule, state.schedule||{});
+  state.version=SCHEMA_VERSION;
+  return state;
+}
+function load(){
+  var raw=null;
+  try{raw=localStorage.getItem(KEY);}catch(e){}
+  if(raw){
+    try{ S=migrate(JSON.parse(raw)); return; }
+    catch(e){
+      /* Don't silently erase recoverable data — keep the unreadable blob aside. */
+      try{localStorage.setItem(KEY+"_corrupt",raw);}catch(e2){}
+      loadError=true;
+    }
+  }
+  S=defaultState();
+}
+function initProf(){
+  SUBJECTS.forEach(function(sb){ if(!S.prof[sb.id]) S.prof[sb.id]={level:2,struggle:0,advance:0}; });
+}
+function applyModeTargets(){
+  SUBJECTS.forEach(function(sb){ S.targets[sb.id]=(S.profile.mode==="homeschool")?sb.hs:sb.sum; });
+}
+function targetShare(id){
+  var tot=0; SUBJECTS.forEach(function(sb){tot+=(S.targets[sb.id]||0);});
+  return tot? (S.targets[id]||0)/tot : 0;
+}
+
+/* ================= ACTIVITY MATH ================= */
+function doneMissions(){return S.missions.filter(function(m){return m.status==="done";});}
+function minutesBySubject(sinceDays){
+  var cutoff=addDays(todayYMD(),-sinceDays), map={};
+  SUBJECTS.forEach(function(sb){map[sb.id]=0;});
+  doneMissions().forEach(function(m){ if(m.date>=cutoff) map[m.subject]=(map[m.subject]||0)+(m.minutes||20); });
+  S.extraLog.forEach(function(e){ if(e.date>=cutoff && map[e.subject]!=null) map[e.subject]+=(+e.minutes||0); });
+  return map;
+}
+function coverageRatio(id,sinceDays){
+  var map=minutesBySubject(sinceDays), tot=0;
+  for(var k in map) tot+=map[k];
+  if(!tot) return null;
+  var share=map[id]/tot, tgt=targetShare(id);
+  return tgt? share/tgt : 0;
+}
+function schoolDays(start,end){
+  var days={};
+  doneMissions().forEach(function(m){ if(m.date>=start&&m.date<=end) days[m.date]=1; });
+  S.extraLog.forEach(function(e){ if(e.date>=start&&e.date<=end) days[e.date]=1; });
+  return Object.keys(days).length;
+}
+function totalMinutes(start,end){
+  var t=0;
+  doneMissions().forEach(function(m){ if(m.date>=start&&m.date<=end) t+=(m.minutes||20); });
+  S.extraLog.forEach(function(e){ if(e.date>=start&&e.date<=end) t+=(+e.minutes||0); });
+  return t;
+}
+
+/* ==SECTION:TEMPLATES== */
+/* {C}=hero name, {I}=interest. Tone rules: invite, never pressure; effort praise; mistakes are clues. */
+var FALLBACKS=[
+  "If resistance shows up: shrink it. Do only the first step together, then celebrate and stop.",
+  "If frustration rises: 'The tide changed — we will catch it tomorrow.' Stop with warmth. No debt.",
+  "If attention drifts: take a 2-minute wiggle break, then ask if they want the easier version or to stop here."
+];
+var REFLECTS=[
+  "What was the trickiest part?","What would you do differently next time?",
+  "What surprised you?","Which part should we tell the rest of the family about?"
+];
+var TEMPLATES={
+reading:[
+ {t:"The {I} Message",hook:"A secret message about {I} has arrived in the map room. Only {C} can read it aloud before sundown.",scene:"At first light, a runner reached the map room out of breath. A sealed dispatch had arrived — its edges singed from a long and difficult journey — addressed to {C} alone. Inside, the Society believes, is a clue about {I} that no one else has been able to make out, and the old ink fades when the sun goes down: every word must be read aloud before the light leaves. Setting the scene: hand over the rolled scroll with both hands and a little ceremony; if you can, dim the lights and set a lamp nearby.",goal:"Read the secret message aloud, all the way through.",mat:"A short note you write (3-6 sentences about {I}, sized to their level), rolled like a scroll.",steps:"Hand over the scroll with ceremony. {C} decodes it line by line; you help only when asked. Re-read it once more 'for the record.'",easy:"3 short sentences, mostly sight words; read it together first, then they solo.",hard:"6+ sentences with two new words; they read cold, then explain it back in their own words."},
+ {t:"{I} Story Quest",hook:"The Society needs a report: what really happens in the world of {I}? Tonight {C} reads one chapter of the evidence.",scene:"The Society's archive has a gap where the account of {I} should be, and tonight {C} is the one trusted to recover it — one chapter at a time, read by lamplight. Somewhere in these pages is the truth of what really happens out there, and a careful reader brings it back word by word. Setting the scene: settle in somewhere cozy, give {C} the hero's voice, and stop on a cliffhanger on purpose so the next chapter feels earned.",goal:"Read for the session length, with {C} reading the hero's lines.",mat:"Any book touching {I} (library pick counts as part of the mission).",steps:"You narrate, {C} reads the dialogue or alternating pages. Stop at a cliffhanger on purpose.",easy:"You read; {C} reads 3-5 chosen words per page (point them out in advance).",hard:"{C} reads a full page solo, then predicts the next chapter."}],
+writing:[
+ {t:"Field Journal: {I}",hook:"Every explorer keeps a field journal. Today's entry: a {I} discovery report.",scene:"Every explorer the Society has ever sent into the field carried a journal — and the rule has always been the same: a discovery only counts once it's written down. Today {C} records the {I} entry, first the drawing of what was found, then the words that make it official. Setting the scene: lay the journal out like real expedition kit, and remember the explorer signs their own entry, even when you scribe the rest as they dictate.",goal:"One journal entry: a drawing plus sentences describing it.",mat:"Notebook or folded paper 'journal', pencil, colors.",steps:"{C} draws the discovery, then writes a caption/sentences. You take dictation for anything beyond their stamina — they sign it.",easy:"They write 1 label or sentence; you scribe the rest as they dictate.",hard:"3+ sentences with a beginning, middle, end; they read it aloud to the family."},
+ {t:"Letter to the Quartermaster",hook:"The Quartermaster sent {C} a letter about {I} — and is waiting for a reply.",scene:"A letter has come in for {C}, sealed and signed by the Quartermaster, full of questions about {I} — and the Quartermaster is not a patient correspondent. A reply must be written and sent before the next post leaves the map room. Setting the scene: read the letter aloud together first, give spelling help freely the moment it's asked for, then seal the reply and 'post' it somewhere official in the house.",goal:"Write a short reply letter and 'send' it.",mat:"A short letter from the Quartermaster (you write it), paper, envelope.",steps:"Read the letter together. {C} replies; spelling help is given freely when asked. Seal and post it somewhere official.",easy:"They dictate; they hand-write only the greeting and their name.",hard:"They draft, then fix two spellings themselves using a 'detective check.'"}],
+math:[
+ {t:"{I} Supply Run",hook:"The {I} expedition leaves at dawn. {C} must calculate the supplies or the crew goes hungry.",scene:"The {I} expedition ships out at dawn, and the stores are in disarray — if the supplies aren't counted exactly right, the crew goes hungry somewhere far from home. {C} has been handed the manifest and the whole job of getting every number to add up. Setting the scene: lay out small objects as the real supplies, pose each problem like a genuine crew emergency, and let {C} build the answer with their hands before recording it on the manifest.",goal:"Solve the supply problems (real objects, real counting).",mat:"Any small objects as supplies (lego, snacks, coins), paper for the manifest.",steps:"Pose 4-6 supply problems sized to level ('3 crew, 2 rations each — how many?'). {C} builds the answer with objects, then records it on the manifest.",easy:"Counting and combining within 10, objects in hand.",hard:"Mental math, no objects; add a two-step problem ('...and we lost 4 overboard')."},
+ {t:"Skip-Count Countdown",hook:"The {I} launch needs a countdown — but the computer only counts by 2s (or 5s, or 10s).",scene:"Launch is only minutes away, but the {I} mission computer has glitched — it will count in steps and nothing else, and a clean countdown is the one thing standing between the crew and lift-off. {C} is the only one steady enough to keep the count true. Setting the scene: count together in rhythm first, then let {C} solo with a jump on every number; treat each stumble as a funny 'system glitch' to fix and rerun, never a failure.",goal:"Skip-count up and back without the machine breaking (3 clean runs).",mat:"None — or a homemade 'control panel.'",steps:"Count together in rhythm, then {C} solos. Add movement: one jump per number. Mistakes are 'system glitches' — funny, fix, rerun.",easy:"By 10s then 5s, with a number line visible.",hard:"By 2s starting from odd numbers; then 'what is 5 jumps of 5?'"},
+ {t:"Build the {I} Base",hook:"Headquarters approved a new {I} base — if the math checks out.",scene:"Headquarters has approved a brand-new {I} base — on one strict condition: the numbers must check out before construction is signed off. {C} is both the architect who builds it and the one who proves the math holds. Setting the scene: let {C} build freely with blocks, then slip the math in at natural moments — how many per row? double it? — and record the findings on a real 'blueprint.'",goal:"Design and build a base; calculate its real numbers.",mat:"Lego/blocks/boxes, paper for the blueprint.",steps:"{C} builds; you inject math at natural moments: how many per row? total windows? double it? Record 3 findings on the blueprint.",easy:"Counting, comparing (more/fewer), simple addition.",hard:"Arrays as multiplication, perimeter walk-around, 'half of' and 'twice as many.'"}],
+science:[
+ {t:"Backyard {I} Census",hook:"The Society suspects this backyard hides clues about {I}. {C} is the field scientist.",scene:"The Society has a strong hunch that this very backyard holds clues about {I}, and they need a field scientist sharp enough to prove it. {C} takes the post: predict first, then observe, count, and record what's really out there. Setting the scene: make the prediction out loud before heading out — a wrong guess is the best kind of data — then survey and tally like a true expedition, magnifier in hand if you have one.",goal:"Observe, count, and record findings; one prediction tested.",mat:"Journal, pencil, magnifier if you have one.",steps:"Predict first ('what will we find most of?'), then survey, tally, compare to the prediction. Wrong predictions are the best data.",easy:"One simple tally (bugs, birds, leaf types).",hard:"Two variables ('shade vs sun'), and a why-guess tested with a second look."},
+ {t:"The {I} Experiment",hook:"Question from headquarters: nobody knows what happens when... (pick one with {C}).",scene:"A question has come down from headquarters that nobody can answer about {I} — and the only honest way to settle it is to test it firsthand. {C} runs the experiment from first question to final observation. Setting the scene: choose the question together, predict aloud what will happen, then run it safely and say in one clear sentence what actually happened, for the record.",goal:"Run one safe kitchen/backyard experiment start to finish.",mat:"Household items per the chosen question (float/sink, melt, mix, drop, grow).",steps:"Ask -> predict -> test -> observe -> say what happened in one sentence for the journal.",easy:"You run it, {C} predicts and observes.",hard:"{C} designs a second round changing one thing on purpose."}],
+social:[
+ {t:"Time Machine: {I}",hook:"The map room's time machine can visit the people who first dealt with {I}. One trip authorized.",scene:"The map room's time machine has been cleared for a single authorized journey — back to the people who first dealt with {I}, long before our time. {C} is the traveler chosen to see how life truly was and bring the story home. Setting the scene: explore the era together, hunt for three 'time treasures' (facts), and have {C} report them at dinner like a traveler just returned from far away.",goal:"Learn 3 facts about how people lived/did this long ago; report back.",mat:"A library book, or a parent-told story from history touching {I}.",steps:"Explore together, hunt 3 'time treasures' (facts), {C} reports them at dinner like a returning traveler.",easy:"You tell the story; {C} retells one part.",hard:"{C} compares then vs now: what changed and why?"}],
+geography:[
+ {t:"Chart the {I} Territory",hook:"The Society's map of the {I} territory is missing. {C} must draw it before rival explorers do.",scene:"The Society's only chart of the {I} territory has gone missing, and word is that rival explorers are already on the move to claim it. {C} must map it first — every landmark, a compass rose, and one secret marked with an X. Setting the scene: pick the territory together (a bedroom, the backyard, or an imagined land), add symbols and a key like a real cartographer, and bury one secret on the map to be found later.",goal:"Draw a map with a key, compass rose, and 3 labeled places.",mat:"Paper, pencil, colors; a real map to peek at for style.",steps:"Invent or copy the territory (bedroom, backyard, or imaginary {I} land). Add symbols and a key. Bury one secret X.",easy:"You draw the outline; {C} adds and labels 3 places.",hard:"Add a scale ('10 steps = 1 square'), directions quiz: 'what is north of the X?'"}],
+civics:[
+ {t:"The {I} Crew Code",hook:"Every great crew has a code. The {I} crew of {C} needs its laws written.",scene:"No crew has ever survived a long voyage without a code to live by — and the {I} crew of {C} has been sailing without one. Today its laws finally get written down and signed by every hand aboard. Setting the scene: talk it through first — what makes a rule fair, and who do rules protect? — then let {C} propose the laws, refine them together, and have everyone sign the charter to make it real.",goal:"Write 3-5 fair rules for the crew and why each exists.",mat:"Paper 'charter', pen for signing.",steps:"Discuss: what makes a rule fair? Who do rules protect? {C} proposes, you both refine, everyone signs the charter.",easy:"Pick 3 from examples you offer.",hard:"Add: what happens when someone breaks one — and what makes a consequence fair vs mean?"}],
+health:[
+ {t:"{I} Crew Safety Drill",hook:"Headquarters requires every {I} crew to pass the safety drill (fire prevention counts for the record).",scene:"Headquarters won't clear the {I} crew for duty until they've passed the safety drill — the kind of skill that matters most on the one day you actually need it. {C} trains until it runs smooth and sure. Setting the scene: run it like a real drill with a clipboard in hand, three times through, a little faster each round, and stamp the 'certification' once it's solid.",goal:"Practice one real safety skill until smooth.",mat:"Depends: fire escape route walk, street-crossing practice, helmet check, 911 role-play.",steps:"Teach it as a drill with a clipboard. Run it 3 times, faster each time. Stamp the 'certification.'",easy:"One step at a time with you alongside.",hard:"{C} teaches the drill to a stuffed-animal recruit or sibling."},
+ {t:"Fuel for Explorers",hook:"Explorers need expedition fuel. {C} plans the {I} mission menu.",scene:"No expedition ever got far running on empty — explorers need proper fuel, and the {I} mission menu still hasn't been planned. {C} takes charge of the galley. Setting the scene: talk together about what a body really needs for a long day in the field, then let {C} plan the plate, help make it, and give it an honest taste-test rating.",goal:"Plan (or make) one balanced snack/meal and explain the choices.",mat:"Kitchen, paper for the menu.",steps:"Talk: what does a body need for an expedition? {C} plans the plate, helps make it, rates it.",easy:"Choose between offered options and say why.",hard:"Balance the whole plate solo + one 'sometimes food' honestly placed."}],
+pe:[
+ {t:"{I} Training Course",hook:"Recruits for the {I} expedition must pass the training course. {C} designs it AND runs it.",scene:"No recruit joins the {I} expedition without clearing the training course — and this time {C} gets to design the whole thing and then run it. The only record that counts is their own first time around. Setting the scene: let {C} build the course, you test it first and be cheerfully terrible at it, then time each run only against their own best — never against anyone else's.",goal:"Build an obstacle/skills course, run it 3 times, beat your own first time.",mat:"Backyard/park stuff: chalk, cones, rope, bike, pool toys.",steps:"{C} designs, you test it first (be bad at it — funny). Time runs against THEIR OWN first run only. Never against others.",easy:"3 stations, walking pace allowed.",hard:"5 stations, add a skill they are working on (bike loop, swim lap)."}],
+art:[
+ {t:"Official {I} Portrait",hook:"The Society hall needs an official portrait from the world of {I}, by artist {C}.",scene:"There is an empty frame on the wall of the Society hall, and it has been waiting a long time for an official portrait from the world of {I} — to be painted by the artist {C}. Setting the scene: study one real example together for inspiration first (every master began by copying), then let {C} make their own version, and hold a genuine frame-and-hang ceremony when it's finished.",goal:"One finished artwork, signed, hung somewhere real.",mat:"Any medium they love.",steps:"Look at one real example for inspiration (book/photo), then make their own version. Frame-and-hang ceremony matters.",easy:"Trace or copy with pride — masters copied first.",hard:"Add a background that tells a story; explain the choices at the hanging."}],
+music:[
+ {t:"The {I} Anthem",hook:"Every expedition has an anthem. The {I} crew's is unwritten — until today.",scene:"Every great expedition marches to an anthem of its own, and the {I} crew has somehow sailed this far without one — until tonight, when {C} composes it. Setting the scene: borrow a tune {C} already knows, rewrite the words about {I} together, then perform it twice with full spirit and record it on your phone for the Society archive.",goal:"Compose/perform a short anthem (made-up words to a known tune counts fully).",mat:"Voice; pots and pans percussion welcome.",steps:"Pick a tune they know, rewrite words about {I} together, perform it twice, record it on your phone for the archive.",easy:"You draft lines, {C} fills in rhyming words.",hard:"{C} adds a rhythm part and teaches you your part."}],
+spanish:[
+ {t:"Capitan {C}: {I} en espanol",hook:"The {I} crew speaks Spanish on Tuesdays. Captain {C} must give the orders.",scene:"Aboard this ship there's an old tradition: on Tuesdays the {I} crew speaks only Spanish, and every order falls to Capitan {C}. No memorizing, no worksheets — just real sentences, built one block at a time and spoken right out loud. Setting the scene: you carry the structure ('Quiero...'), {C} builds the sentence, then you swap in {I} words and keep the whole thing playful and quick.",goal:"Build and SAY 5+ real sentences from blocks. No memorizing, no writing.",mat:"None. (Michel Thomas style: you carry the structure, they build.)",steps:"Give one block: 'Quiero...' (I want). Ask: how would the captain say 'I want the map'? They build: 'Quiero el mapa.' Swap objects ({I} words!), then add 'No quiero...'. Always speaking, always playful.",easy:"3 sentences, you say it first, they echo then swap one word.",hard:"Add a second block ('Vamos a...' - we are going to) and chain them."},
+ {t:"Spanish Treasure Words",hook:"5 treasure words about {I} are hidden in the house — but they only unlock in Spanish.",scene:"Five treasure words about {I} have been hidden around the house, and every one of them is locked tight — they open only when spoken aloud in Spanish. {C} is the one sent to find them. Setting the scene: hide sticky notes that pair a picture with the Spanish word, and rule that each note found must be used in a spoken sentence frame you supply before it counts as claimed.",goal:"Use all 5 words in spoken sentences during a treasure hunt.",mat:"5 sticky notes with picture + Spanish word, hidden.",steps:"Each found note must be used in a sentence frame you supply ('Veo un...' - I see a). Old words from past hunts can resurface as bonus treasure (spaced review, disguised).",easy:"Echo the word in the frame.",hard:"They build the sentence solo and add one adjective."}],
+speaking:[
+ {t:"The {I} Briefing",hook:"Headquarters needs a 1-minute briefing on {I}. Expert: {C}. Audience: the family.",scene:"A request has come down from headquarters: a one-minute briefing on {I}, delivered by the one expert they trust on the subject — {C} — to the assembled audience of the family. Setting the scene: prep three points together (they already know this topic, so the confidence is pre-loaded), rehearse once to a stuffed animal, then deliver it live at dinner; applause is mandatory.",goal:"Deliver a tiny talk: stand, say 3 things, take 1 question.",mat:"A 'podium' (chair/box), optional drawing as the visual aid.",steps:"Prep 3 points together (they know this topic - confidence is pre-loaded). Rehearse once to a stuffed animal, then live at dinner. Applause is mandatory.",easy:"Show-and-tell one object, say 2 things about it.",hard:"90 seconds, opens with a question to the audience, handles 2 questions."}],
+conflict:[
+ {t:"Crew Dispute at {I} Base",hook:"Two crew members (stuffed animals/minifigs) both want the same {I} job. Captain {C} must settle it fairly.",scene:"Trouble has broken out at {I} base: two crew members both want the very same job, and tempers are climbing fast. Captain {C} is called in to settle it fairly before it splits the crew. Setting the scene: you voice both sides and make it a little funny, let {C} hear each one out and find a solution, then name the move that worked — 'taking turns,' 'trading,' 'listening first' — so it's ready to use for real next time.",goal:"Role-play the dispute to a fair solution; name the trick that worked.",mat:"Two characters, the disputed thing.",steps:"You voice both sides (make it funny). {C} hears both, asks each what they want, finds a solution. Then name the move ('taking turns', 'trading', 'listening first'). Quietly revisit the move next real conflict.",easy:"Offer two solutions, they pick the fairer one and say why.",hard:"A harder case: both are RIGHT in some way. And: 'what would you do if YOU were one of them?'"}],
+courage:[
+ {t:"The Brave Thing",hook:"The Society awards the Lantern Badge for one brave thing: something hard {C} chooses to try today.",scene:"The Society reserves its Lantern Badge for a single kind of act: a brave thing, freely chosen — something genuinely hard that {C} decides to try today. Setting the scene: offer two or three options and let {C} pick (the choosing is the whole engine), remind them that scared and brave happen at the very same time, and afterward — win or not — say it plainly: 'You tried the hard thing, and that IS the badge.'",goal:"Pick one just-hard-enough thing, try it, and notice the after-feeling.",mat:"Depends on the chosen thing (a high-ish slide, ordering at the counter, a hard puzzle, bike past the markers, head underwater).",steps:"THEY pick from 2-3 options (choice is the engine). Before: 'scared and brave happen at the same time - that is the whole trick.' After, win or not: 'You tried the hard thing. That IS the badge.' Log what they say.",easy:"A smaller slice of the same brave thing.",hard:"They set next week's brave thing themselves."}],
+finlit:[
+ {t:"The {I} Treasury",hook:"The crew earned coins from the last expedition. Treasurer {C} must split them wisely.",scene:"The crew has come home from the last expedition with a purse of hard-earned coins, and now it falls to Treasurer {C} to decide what becomes of them — spend, save, or give. Setting the scene: tell the story of how the coins were earned, talk through wants versus needs versus helping others, and let {C} make the split and defend it; revisit the jars next time to watch the savings grow.",goal:"Split real or play money into spend / save / give and explain the choices.",mat:"Coins (real ones are more exciting), 3 jars or drawn chests.",steps:"Story: the crew earned 10 coins. What now? Talk through wants vs needs vs helping others. {C} splits and defends the split. Revisit the jars next mission - watching savings grow is the lesson.",easy:"Split 6 coins with your gentle suggestions.",hard:"Add a goal ('the spyglass costs 8 saved coins - how many weeks?')."}],
+entrep:[
+ {t:"The {I} Shop",hook:"The Society marketplace opens Saturday. {C}'s {I} stand needs a plan.",scene:"The Society marketplace throws open its gates on Saturday, and {C} has been granted a prime spot for an {I} stand — if there's a solid plan ready in time. Setting the scene: decide together what to sell, what it costs to make, and the price; build the sign, rehearse the pitch, and if you're going for real, run it thirty minutes with the family as the very first customers.",goal:"Plan (or actually run) a tiny stand: product, price, sign, pitch.",mat:"Paper for the sign, the product (lemonade, drawings, rock collection, cookies).",steps:"Decide: what will you sell? what does it cost to make? what price? Make the sign, rehearse the pitch ('Public Speaking' crossover). If real: run it 30 minutes with family as first customers.",easy:"Family-only shop with play money.",hard:"Real mini-sale; afterward count: earnings minus costs = profit. Where does profit go? (Treasury crossover.)"}],
+thinking:[
+ {t:"The Quartermaster Is Wrong",hook:"Scandal! The Quartermaster sent a claim about {I} that might be WRONG. {C} must check it.",scene:"Scandal in the map room: the Quartermaster has sent out a claim about {I} that might be flat wrong — and {C} is the only one willing to check it instead of simply taking it on faith. Setting the scene: read the claim aloud, ask 'how could we actually check this?', test or look it up together, then deliver the verdict formally — because even official scrolls can be wrong, and checking is the explorer's true superpower.",goal:"Test a claim instead of believing it; verdict with evidence.",mat:"A claim you invent - half-plausible, checkable ('heavier things always fall faster', 'all bugs have 6 legs').",steps:"Read the claim. Ask: how could we CHECK? Test/observe/look it up together. Verdict delivered formally. Lesson said out loud: 'even official scrolls can be wrong - checking is the explorer's superpower.'",easy:"Obviously-checkable claim, test it physically.",hard:"Add a peer-pressure twist: 'everyone in town believes it - does that make it true?'"},
+ {t:"Two Maps Disagree",hook:"Two old maps of the {I} territory disagree. Which one should the crew trust?",scene:"Two old maps of the {I} territory have surfaced in the archive, and they flatly disagree — one of them is leading the crew the wrong way, and {C} must decide which to trust. Setting the scene: examine both together (which has more detail? whose maker was actually there?), then let {C} rule which to follow and say why; the reasoning is the entire mission.",goal:"Compare two sources, decide, and give a reason.",mat:"Two simple 'maps' or two short claims you draw up that conflict.",steps:"Examine both: which has more detail? Which maker was actually there? {C} rules which to trust and why. The why is the whole mission.",easy:"One map is clearly sloppier - spotting it counts.",hard:"Neither is fully right: the crew must combine them. 'What would make you change your mind?'"}]
+};
+
+/* ==SECTION:GENERATOR== */
+function fill(str,interest){
+  return String(str).split("{I}").join(interest).split("{C}").join(S.profile.heroName||S.profile.childName||"the Captain");
+}
+function recentMissions(n){
+  return S.missions.slice().sort(function(a,b){return (b.date||"").localeCompare(a.date||"");}).slice(0,n);
+}
+function pickInterest(){
+  var recent=recentMissions(5).map(function(m){return m.interest;});
+  /* curiosity injection ~20%: diverse exposure, new topics */
+  if(Math.random()<0.2 || S.profile.interests.length===0){
+    return {name:pick(CURIOSITY), curiosity:true};
+  }
+  var pool=S.profile.interests.filter(function(it){
+    var uses=recent.filter(function(r){return r===it.name;}).length;
+    return uses<3; /* diversity guardrail: blocked after 3 of last 5 */
+  });
+  if(pool.length===0) pool=S.profile.interests;
+  var tot=0; pool.forEach(function(it){tot+=it.weight;});
+  var r=Math.random()*tot;
+  for(var i=0;i<pool.length;i++){ r-=pool[i].weight; if(r<=0) return {name:pool[i].name, curiosity:false}; }
+  return {name:pool[pool.length-1].name, curiosity:false};
+}
+function neediestSubject(){
+  var worst=null, worstR=1e9;
+  SUBJECTS.forEach(function(sb){
+    var r=coverageRatio(sb.id,21); if(r===null) r=0;
+    if(r<worstR){worstR=r; worst=sb.id;}
+  });
+  return worst||"reading";
+}
+function generateMission(opts){
+  opts=opts||{};
+  var sid=opts.subject||neediestSubject();
+  var tArr=TEMPLATES[sid]||TEMPLATES.reading;
+  var tmpl=pick(tArr);
+  var iv=opts.interest? {name:opts.interest,curiosity:false} : pickInterest();
+  var p=S.prof[sid]||{level:2,struggle:0,advance:0};
+  var diff=opts.reset? "easy" : (p.level>=4? "hard" : (p.level<=2? "easy":"std"));
+  var mins=opts.minutes|| (opts.reset?10:(S.profile.prefs.sessionMin||20));
+  var m={
+    id:uid(), date:opts.date||todayYMD(), subject:sid, interest:iv.name, curiosity:iv.curiosity,
+    title:fill(tmpl.t,iv.name), hook:fill(tmpl.hook,iv.name), scene:fill(tmpl.scene||tmpl.hook,iv.name), goal:fill(tmpl.goal,iv.name),
+    mat:fill(tmpl.mat,iv.name), steps:fill(tmpl.steps,iv.name),
+    variant:diff, easy:fill(tmpl.easy,iv.name), hard:fill(tmpl.hard,iv.name),
+    fallback:pick(FALLBACKS), reflect:pick(REFLECTS),
+    minutes:mins, status:"planned", reset:!!opts.reset, feedback:null
+  };
+  return m;
+}
+function addMission(m){S.missions.push(m); save();}
+/* Split a scene string into [read-aloud story, staging cue] on the "Setting the scene:" marker. */
+function sceneParts(text){
+  var t=String(text||""); if(!t) return ["",""];
+  var i=t.indexOf("Setting the scene:");
+  if(i<0) return [t.trim(),""];
+  return [t.slice(0,i).trim(), t.slice(i+"Setting the scene:".length).trim()];
+}
+function sceneBlock(scene,isPrint){
+  var sp=sceneParts(scene); if(!sp[0]) return '';
+  if(isPrint){
+    var h='<p><b>The scene:</b> '+esc(sp[0])+'</p>';
+    if(sp[1]) h+='<p style="font-size:12px; color:#6F6757;"><b>Setting the scene:</b> '+esc(sp[1])+'</p>';
+    return h;
+  }
+  var c='<div class="small scene"><b>The scene:</b> '+esc(sp[0])+'</div>';
+  if(sp[1]) c+='<div class="small muted scene-stage"><b>Setting the scene:</b> '+esc(sp[1])+'</div>';
+  return c;
+}
+function missionCardHTML(m,withActions){
+  var sb=subj(m.subject);
+  var html='<div class="mission '+m.status+'" id="m_'+m.id+'">'
+    +'<div class="scroll-seal">'+(m.reset?"reset mission · gentler on purpose":"mission scroll")+'</div>'
+    +'<h4>'+esc(m.title)+'</h4>'
+    +'<div class="meta">'+esc(sb?sb.name:m.subject)+' <span class="pill '+(sb?(sb.grp==="life"?"life":sb.grp==="core"?"core":"enrich"):"core")+'">'+(sb?sb.grp:"")+'</span> · '+esc(m.interest)+(m.curiosity?' <span class="newterr" title="curiosity pick">'+STAR4+' new territory</span>':'')+' · ~'+m.minutes+' min · '+esc(fmtDate(m.date))+'</div>'
+    +'<div class="hook">'+esc(m.hook)+'</div>'
+    +sceneBlock(m.scene,false)
+    +'<div class="small"><b>Goal:</b> '+esc(m.goal)+'</div>'
+    +'<div class="small"><b>Materials:</b> '+esc(m.mat)+'</div>'
+    +'<div class="small"><b>How it goes:</b> '+esc(m.steps)+'</div>'
+    +'<div class="small"><b>Easier dial:</b> '+esc(m.easy)+' &nbsp; <b>Harder dial:</b> '+esc(m.hard)+'</div>'
+    +'<div class="small"><b>If it wobbles:</b> '+esc(m.fallback)+'</div>'
+    +'<div class="small"><b>Reflection (optional, one only):</b> '+esc(m.reflect)+'</div>';
+  if(withActions){
+    html+='<div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">';
+    if(m.status==="planned"){
+      html+='<button class="btn sm amber" onclick="completeFlow(\''+m.id+'\')">Complete &amp; feedback</button>'
+        +'<button class="btn sm ghost" onclick="skipMission(\''+m.id+'\')">Skip (costs nothing)</button>'
+        +'<button class="btn sm ghost" onclick="rerollMission(\''+m.id+'\')">Re-roll</button>';
+    }
+    html+='<button class="btn sm ghost" onclick="printMission(\''+m.id+'\')">Print card</button>'
+      +'<button class="btn sm ghost" onclick="copyAIPrompt(\''+m.id+'\')">Copy AI prompt</button>'
+      +'<button class="btn sm ghost" onclick="deleteMission(\''+m.id+'\')">Delete</button></div>';
+  }
+  if(m.feedback){
+    var f=m.feedback;
+    html+='<div class="small muted" style="margin-top:6px">Child: '+esc(f.childLiked)+(f.childNote?' — “'+esc(f.childNote)+'”':'')
+      +' · Parent: engagement '+f.engagement+'/3, '+esc(f.difficulty)+(f.note?' — '+esc(f.note):'')+'</div>';
+  }
+  return html+'</div>';
+}
+function getMission(id){for(var i=0;i<S.missions.length;i++)if(S.missions[i].id===id)return S.missions[i];return null;}
+function skipMission(id){var m=getMission(id); if(m){m.status="skipped"; save(); renderView();}}
+function deleteMission(id){S.missions=S.missions.filter(function(m){return m.id!==id;}); save(); renderView();}
+function rerollMission(id){
+  var m=getMission(id); if(!m) return;
+  var nm=generateMission({subject:m.subject,date:m.date,minutes:m.minutes});
+  S.missions=S.missions.map(function(x){return x.id===id?nm:x;}); save(); renderView();
+}
+function printMission(id){
+  var m=getMission(id); if(!m) return;
+  $("printArea").innerHTML='<div style="border:2px solid #1F2A44; border-radius:10px; padding:24px; max-width:560px; font-family:\'Source Serif 4\',Georgia,serif;">'
+    +'<div style="letter-spacing:.18em; font-size:11px; color:#C97F1D; font-family:\'Bricolage Grotesque\',sans-serif; font-weight:600;">THE SOCIETY &middot; MISSION SCROLL</div>'
+    +'<h2 style="margin:6px 0; font-family:\'Young Serif\',Georgia,serif; font-weight:normal;">'+esc(m.title)+'</h2>'
+    +'<p><i>'+esc(m.hook)+'</i></p>'
+    +sceneBlock(m.scene,true)
+    +'<p><b>Your goal:</b> '+esc(m.goal)+'</p>'
+    +'<p><b>Gear:</b> '+esc(m.mat)+'</p>'
+    +'<p>'+esc(m.steps)+'</p>'
+    +'<p style="margin-top:18px; font-size:12px;">Easier: '+esc(m.easy)+'<br>Harder: '+esc(m.hard)+'</p>'
+    +'<p style="margin-top:14px; letter-spacing:.18em; font-size:11px; font-family:\'Bricolage Grotesque\',sans-serif;">— THE QUARTERMASTER</p></div>';
+  $("printArea").style.display="block"; window.print(); $("printArea").style.display="none";
+}
+function copyAIPrompt(id){
+  var m=getMission(id);
+  var ints=S.profile.interests.map(function(i){return i.name;}).join(", ");
+  var p="You are generating a learning mission for a parent-led family learning system. Rules: parent is the guide; child never sees metrics; story invites, never bribes; effort praise only; no fear/shame/urgency/comparison; ~80% success rate; immediate feedback through the activity itself; one skill target wrapped in the child's interest; 9 parts: hook, hidden skill target, clear goal, materials (<=5 min prep, physical-first), 1-2 min playful retrieval opener, core loop (generation-first, scaffolds fade), easier+harder variants, graceful fallback, closer with one reflection question.\n\n"
+   +"Child: "+(S.profile.childName||"(name)")+", age "+S.profile.age+". Interests: "+ints+". Session: "+(m?m.minutes:S.profile.prefs.sessionMin)+" minutes. "
+   +(m? "Subject: "+subj(m.subject).name+". Interest wrapper: "+m.interest+". Current variant level: "+m.variant+"." : "")
+   +"\n\nGenerate one complete mission card following all rules, richer and more specific than a template could be.";
+  navigator.clipboard.writeText(p).then(function(){alert("AI prompt copied — paste it into Claude (or any assistant), review the result, then run it as a mission.");});
+}
+/* ---- feedback + iteration engine ---- */
+function completeFlow(id){
+  var m=getMission(id); if(!m) return;
+  openModal('<div class="steps">mission complete · feedback</div>'
+   +'<h2>'+esc(m.title)+'</h2>'
+   +'<h3>Ask '+esc(S.profile.childName||"your child")+':</h3>'
+   +'<label>Did you like it?</label><div class="chips" id="fbLiked">'
+   +['loved it','it was ok','not for me'].map(function(x){return '<span class="chip" data-v="'+x+'" onclick="chipPick(this,\'fbLiked\')">'+x+'</span>';}).join("")+'</div>'
+   +'<label>What did you like / not like? (their words)</label><input type="text" id="fbChildNote">'
+   +'<h3>Your read (parent):</h3>'
+   +'<label>Engagement</label><div class="chips" id="fbEng">'
+   +['0 - resisted','1 - went along','2 - engaged','3 - flow / lost in it'].map(function(x,i){return '<span class="chip" data-v="'+i+'" onclick="chipPick(this,\'fbEng\')">'+x+'</span>';}).join("")+'</div>'
+   +'<label>Difficulty</label><div class="chips" id="fbDiff">'
+   +['too easy','just right','struggled'].map(function(x){return '<span class="chip" data-v="'+x+'" onclick="chipPick(this,\'fbDiff\')">'+x+'</span>';}).join("")+'</div>'
+   +'<label>Notes — what worked, what would make tomorrow better?</label><textarea id="fbNote"></textarea>'
+   +'<label>Actual minutes</label><input type="number" id="fbMin" value="'+m.minutes+'">'
+   +'<div style="margin-top:12px; display:flex; gap:8px;"><button class="btn amber" onclick="saveFeedback(\''+id+'\')">Save</button>'
+   +'<button class="btn ghost" onclick="closeModal()">Cancel</button></div>');
+}
+function chipPick(el,groupId){
+  var sibs=$(groupId).querySelectorAll(".chip");
+  for(var i=0;i<sibs.length;i++) sibs[i].classList.remove("on");
+  el.classList.add("on");
+}
+function chipVal(groupId){var el=$(groupId).querySelector(".chip.on"); return el?el.getAttribute("data-v"):null;}
+function saveFeedback(id){
+  var m=getMission(id); if(!m) return;
+  var liked=chipVal("fbLiked")||"it was ok";
+  var eng=+(chipVal("fbEng")||1);
+  var diff=chipVal("fbDiff")||"just right";
+  m.status="done"; m.minutes=+($("fbMin").value)||m.minutes;
+  m.feedback={childLiked:liked, childNote:$("fbChildNote").value, engagement:eng, difficulty:diff, note:$("fbNote").value};
+  /* interest weights: like/dislike nudges, capped */
+  var it=null; S.profile.interests.forEach(function(x){if(x.name===m.interest)it=x;});
+  if(liked==="loved it"){
+    if(it) it.weight=clamp(it.weight+0.2,0.2,3);
+    else if(m.curiosity) S.profile.interests.push({id:uid(),name:m.interest,weight:1,uses:0}); /* curiosity hit -> becomes a real interest */
+  }
+  if(liked==="not for me" && it) it.weight=clamp(it.weight-0.2,0.2,3);
+  /* proficiency engine */
+  var p=S.prof[m.subject];
+  if(diff==="struggled"){p.struggle++; p.advance=0;}
+  else if(diff==="too easy"){p.advance++; p.struggle=0;}
+  else {p.struggle=0; p.advance=(eng>=2? p.advance:0);}
+  if(p.advance>=2){p.level=clamp(p.level+1,1,5); p.advance=0;}
+  if(p.struggle>=3){p.level=clamp(p.level-1,1,5);} /* after flag at 2, gentle level-down at 3 */
+  save(); closeModal(); renderView();
+}
+function strugglingSubjects(){
+  return SUBJECTS.filter(function(sb){return (S.prof[sb.id]||{}).struggle>=2;});
+}
+function advancingSubjects(){
+  return SUBJECTS.filter(function(sb){var p=S.prof[sb.id]||{}; return p.level>=4&&p.advance>=1 || p.advance>=2;});
+}
+function generateReset(sid){
+  var m=generateMission({subject:sid,reset:true});
+  addMission(m); go("today");
+}
+
+/* ==SECTION:ONBOARDING== */
+var OB_STEPS=8, obStep=0, obTemp=null;
+var INTEREST_SEEDS=["dinosaurs","pirates","space","lego","vehicles","drawing","storytelling","chess","biking","swimming","animals","princesses","superheroes","cooking","nature","video games","music","sports","fairies","robots"];
+var FORMAT_SEEDS=["hands-on building","stories & role-play","movement & outdoors","drawing & making","games & puzzles","songs & music","screen activities (small doses)","cooking & real-world jobs"];
+function startOnboarding(opts){
+  obStep=(opts&&opts.step)||0;
+  obTemp=JSON.parse(JSON.stringify(S.profile));
+  renderOnboarding();
+}
+function renderOnboarding(){
+  var h='<div class="steps">welcome to the map room · step '+(obStep+1)+' of '+OB_STEPS+'</div>';
+  if(obStep===0){
+    h+='<h2>Welcome to the map room</h2><p class="muted">Lantero is a private, parent-led learning planner. Everything stays <b>on this device, in this browser</b> — nothing is sent anywhere. You can export a backup anytime from Settings. This quick setup tailors the missions; re-tune any step later.</p>'
+     +'<h2 style="margin-top:14px">What season is this?</h2><p class="muted">This sets the default balance of subjects. Do the next steps <b>together with your child</b> — their answers are the fuel.</p>'
+     +'<div class="chips" id="obMode">'
+     +[["homeschool","Homeschooling — this is school"],["summer","Summer / school break"],["afterschool","After-school supplement"]].map(function(x){
+        return '<span class="chip'+(obTemp.mode===x[0]?" on":"")+'" data-v="'+x[0]+'" onclick="chipPick(this,\'obMode\')">'+x[1]+'</span>';}).join("")+'</div>';
+  } else if(obStep===1){
+    h+='<h2>Who is the explorer?</h2>'
+     +'<label>Child\'s name</label><input type="text" id="obName" value="'+esc(obTemp.childName)+'">'
+     +'<label>Hero name for missions (optional — "Captain Willie")</label><input type="text" id="obHero" value="'+esc(obTemp.heroName)+'">'
+     +'<label>Age</label><input type="number" id="obAge" value="'+obTemp.age+'">'
+     +'<label>Your state (for the compliance ledger)</label><input type="text" id="obState" value="'+esc(obTemp.usState)+'">';
+  } else if(obStep===2){
+    h+='<h2>Ask them: what do you love?</h2><p class="muted">Tap everything that lights them up. Add their own words. These become the worlds missions happen in.</p>'
+     +'<div class="chips" id="obInts">'+INTEREST_SEEDS.map(function(x){
+        var on=obTemp.interests.some(function(i){return i.name===x;});
+        return '<span class="chip'+(on?" on":"")+'" data-v="'+x+'" onclick="this.classList.toggle(\'on\')">'+x+'</span>';}).join("")+'</div>'
+     +'<label>Add your own (comma-separated)</label><input type="text" id="obIntCustom" placeholder="e.g., sharks, grandpa\'s tractor, Minecraft">';
+  } else if(obStep===3){
+    h+='<h2>How do they like to learn?</h2><p class="muted">Ask: "Which of these sounds the most fun?" Pick all that fit.</p>'
+     +'<div class="chips" id="obFmt">'+FORMAT_SEEDS.map(function(x){
+        var on=obTemp.prefs.formats.indexOf(x)>=0;
+        return '<span class="chip'+(on?" on":"")+'" onclick="this.classList.toggle(\'on\')" data-v="'+x+'">'+x+'</span>';}).join("")+'</div>'
+     +'<label>Typical good session length (minutes)</label><input type="number" id="obSess" value="'+obTemp.prefs.sessionMin+'">'
+     +'<label>Best time of day</label><select id="obTime"><option'+(obTemp.prefs.bestTime==="morning"?" selected":"")+'>morning</option><option'+(obTemp.prefs.bestTime==="afternoon"?" selected":"")+'>afternoon</option><option'+(obTemp.prefs.bestTime==="evening"?" selected":"")+'>evening</option></select>';
+  } else if(obStep===4){
+    h+='<h2>Where are they right now?</h2><p class="muted">Your honest gut read, 1 (brand new) to 5 (cruising). This calibrates difficulty — it is never shown to the child.</p>';
+    SUBJECTS.filter(function(sb){return sb.grp==="core"||sb.id==="spanish";}).forEach(function(sb){
+      var lv=(S.prof[sb.id]||{level:2}).level;
+      h+='<label>'+sb.name+'</label><div class="lvl" id="lv_'+sb.id+'">';
+      for(var i=1;i<=5;i++) h+='<button class="'+(i===lv?"on":"")+'" onclick="lvlPick(\''+sb.id+'\','+i+',this)">'+i+'</button>';
+      h+='</div>';
+    });
+  } else if(obStep===5){
+    h+='<h2>Life skills — what matters most right now?</h2><p class="muted">All six stay in the rotation; your picks get extra weight.</p>'
+     +'<div class="chips" id="obLife">'+SUBJECTS.filter(function(sb){return sb.grp==="life";}).map(function(sb){
+        var on=obTemp.lifePriorities.indexOf(sb.id)>=0;
+        return '<span class="chip'+(on?" on":"")+'" data-v="'+sb.id+'" onclick="this.classList.toggle(\'on\')">'+sb.name+'</span>';}).join("")+'</div>';
+  } else if(obStep===6){
+    h+='<h2>Rhythm</h2>'
+     +'<label>Learning days per week</label><input type="number" id="obDays" value="'+S.schedule.daysPerWeek+'" min="1" max="7">'
+     +'<label>Target learning minutes per day (missions + reading + projects)</label><input type="number" id="obMin" value="'+S.schedule.dailyMin+'">'
+     +'<p class="muted small" style="margin-top:8px">Gentle truth: short and joyful beats long and forced. A 20-minute mission plus evening reading is a real learning day at age '+obTemp.age+'. "No mission today" is always a legitimate day and costs nothing.</p>';
+  } else if(obStep===7){
+    h+='<h2>The ledger</h2><p class="muted">Lantero quietly logs instructional days, minutes, and subject coverage against the strictest-state standard (MA approval-grade plan, NY-grade reporting, PA-grade records). For '+esc(obTemp.usState)+', that means you will be covered with margin. All records are parent-side only — the child never sees a number.</p>'
+     +'<p class="muted">You are set. The map room is open.</p>';
+  }
+  h+='<div style="margin-top:14px; display:flex; gap:8px;">'
+   +(obStep>0?'<button class="btn ghost" onclick="obBack()">Back</button>':'')
+   +'<button class="btn amber" onclick="obNext()">'+(obStep===OB_STEPS-1?"Open the map room":"Next")+'</button></div>';
+  openModal(h);
+}
+function lvlPick(sid,v,el){
+  S.prof[sid]=S.prof[sid]||{level:2,struggle:0,advance:0}; S.prof[sid].level=v;
+  var sibs=$("lv_"+sid).querySelectorAll("button");
+  for(var i=0;i<sibs.length;i++) sibs[i].classList.remove("on");
+  el.classList.add("on");
+}
+function obCollect(){
+  if(obStep===0){var v=chipVal("obMode"); if(v) obTemp.mode=v;}
+  if(obStep===1){obTemp.childName=$("obName").value; obTemp.heroName=$("obHero").value; obTemp.age=+$("obAge").value||6; obTemp.usState=$("obState").value;}
+  if(obStep===2){
+    var picked=[]; var chips=$("obInts").querySelectorAll(".chip.on");
+    for(var i=0;i<chips.length;i++) picked.push(chips[i].getAttribute("data-v"));
+    ($("obIntCustom").value||"").split(",").forEach(function(x){x=x.trim(); if(x) picked.push(x);});
+    var old={}; obTemp.interests.forEach(function(it){old[it.name]=it;});
+    obTemp.interests=picked.map(function(n){return old[n]||{id:uid(),name:n,weight:1,uses:0};});
+  }
+  if(obStep===3){
+    var f=[]; var chips2=$("obFmt").querySelectorAll(".chip.on");
+    for(var j=0;j<chips2.length;j++) f.push(chips2[j].getAttribute("data-v"));
+    obTemp.prefs.formats=f; obTemp.prefs.sessionMin=+$("obSess").value||20; obTemp.prefs.bestTime=$("obTime").value;
+  }
+  if(obStep===5){
+    var lp=[]; var chips3=$("obLife").querySelectorAll(".chip.on");
+    for(var k=0;k<chips3.length;k++) lp.push(chips3[k].getAttribute("data-v"));
+    obTemp.lifePriorities=lp;
+  }
+  if(obStep===6){S.schedule.daysPerWeek=+$("obDays").value||5; S.schedule.dailyMin=+$("obMin").value||60;}
+}
+function obNext(){
+  obCollect();
+  if(obStep<OB_STEPS-1){obStep++; renderOnboarding(); return;}
+  S.profile=obTemp; applyModeTargets();
+  /* life priorities get extra target weight */
+  (S.profile.lifePriorities||[]).forEach(function(id){S.targets[id]=(S.targets[id]||2)+2;});
+  S.onboarded=true; save(); closeModal();
+  $("hdrWho").textContent=S.profile.childName+" · "+({homeschool:"Homeschool",summer:"Summer",afterschool:"After-school"})[S.profile.mode];
+  go("today");
+}
+function obBack(){obCollect(); if(obStep>0){obStep--; renderOnboarding();}}
+
+/* ==SECTION:VIEWS== */
+function missionsOn(date){return S.missions.filter(function(m){return m.date===date;});}
+function viewToday(){
+  var t=todayYMD(), ms=missionsOn(t);
+  var planned=ms.filter(function(m){return m.status==="planned";});
+  var mins=totalMinutes(t,t);
+  var h='<h2>Today — '+fmtDate(t)+'</h2>';
+  var flags='';
+  strugglingSubjects().forEach(function(sb){
+    flags+='<div class="flag bad"><b>'+sb.name+'</b> has wobbled twice in a row. The mission design needs to change — not the effort. '
+      +'<button class="btn sm" onclick="generateReset(\''+sb.id+'\')">Generate a reset mission</button> <span class="muted small">(smaller, gentler, new wrapper)</span></div>';
+  });
+  advancingSubjects().forEach(function(sb){
+    flags+='<div class="flag good"><b>'+sb.name+'</b> looks ready for more — recent missions came easy. The next one will run a level harder.</div>';
+  });
+  flags+=backupNudge();
+  h+=flags;
+  h+='<div class="card"><div class="row"><div class="col">'
+   +'<b>'+ms.filter(function(m){return m.status==="done";}).length+'</b> done · <b>'+planned.length+'</b> planned · <b>'+mins+'</b> min logged'
+   +'</div><div class="col" style="text-align:right">'
+   +'<button class="btn amber" onclick="newMissionDialog(\''+t+'\')">+ New mission</button> '
+   +'<button class="btn ghost" onclick="quickLogDialog()">Log other learning</button>'
+   +'</div></div></div>';
+  if(ms.length===0) h+='<div class="card muted">No missions yet today. Generate one — or don\'t. Rest days are real days.</div>';
+  ms.forEach(function(m){h+=missionCardHTML(m,true);});
+  return h;
+}
+function newMissionDialog(date){
+  var opts='<option value="">Auto — where the lantern is dimmest</option>';
+  SUBJECTS.forEach(function(sb){opts+='<option value="'+sb.id+'">'+sb.name+'</option>';});
+  var iopts='<option value="">Auto — weighted by their loves (with surprises)</option>';
+  S.profile.interests.forEach(function(it){iopts+='<option>'+esc(it.name)+'</option>';});
+  openModal('<div class="steps">new mission</div><h2>Build a mission</h2>'
+   +'<label>Subject</label><select id="nmSubj">'+opts+'</select>'
+   +'<label>Interest wrapper</label><select id="nmInt">'+iopts+'</select>'
+   +'<label>Minutes</label><select id="nmMin"><option>10</option><option selected>20</option><option>30</option></select>'
+   +'<label>Date</label><input type="date" id="nmDate" value="'+date+'">'
+   +'<div style="margin-top:12px; display:flex; gap:8px;"><button class="btn amber" onclick="doNewMission()">Generate</button>'
+   +'<button class="btn ghost" onclick="closeModal()">Cancel</button></div>');
+}
+function doNewMission(){
+  var m=generateMission({subject:$("nmSubj").value||null, interest:$("nmInt").value||null,
+    minutes:+$("nmMin").value, date:$("nmDate").value||todayYMD()});
+  addMission(m); closeModal(); renderView();
+}
+function quickLogDialog(){
+  var chips=SUBJECTS.map(function(sb){return '<span class="chip" data-v="'+sb.id+'" onclick="this.classList.toggle(\'on\')">'+esc(sb.name)+'</span>';}).join("");
+  openModal('<div class="steps">log other learning</div><h2>It all counts</h2>'
+   +'<p class="muted small">Library trips, museum days, an hour of free reading, swim practice — log it so the ledger and the heat map see the whole picture.</p>'
+   +'<label>Which subject(s) did it touch? (pick one or more)</label><div class="chips" id="qlSubj">'+chips+'</div>'
+   +'<label>Total minutes</label><input type="number" id="qlMin" value="30">'
+   +'<label>Date</label><input type="date" id="qlDate" value="'+todayYMD()+'">'
+   +'<label>Note (feeds the quarterly report)</label><input type="text" id="qlNote" placeholder="e.g., library visit — picked 4 dinosaur books">'
+   +'<p class="muted small" style="margin-top:6px">Minutes are split evenly across the subjects you pick, so each one gets credit toward the month and the quarter.</p>'
+   +'<div style="margin-top:12px; display:flex; gap:8px;"><button class="btn amber" onclick="doQuickLog()">Log it</button>'
+   +'<button class="btn ghost" onclick="closeModal()">Cancel</button></div>');
+}
+function doQuickLog(){
+  var on=$("qlSubj").querySelectorAll(".chip.on"), ids=[];
+  for(var i=0;i<on.length;i++) ids.push(on[i].getAttribute("data-v"));
+  if(ids.length===0){alert("Pick at least one subject so the learning gets credited.");return;}
+  var date=$("qlDate").value||todayYMD(), total=+$("qlMin").value||0, note=$("qlNote").value;
+  var per=Math.round(total/ids.length);
+  ids.forEach(function(id){ S.extraLog.push({date:date, minutes:per, subject:id, note:note}); });
+  save(); closeModal(); renderView();
+}
+function viewWeek(){
+  var ws=weekStart(todayYMD());
+  var plan=S.weekPlans[ws]||{note:"",targetCount:S.schedule.daysPerWeek};
+  var doneCt=0, names=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+  var cells='';
+  for(var i=0;i<7;i++){
+    var d=addDays(ws,i), ms=missionsOn(d);
+    var dDone=ms.filter(function(m){return m.status==="done";}).length;
+    doneCt+=dDone;
+    cells+='<div class="daycell'+(d===todayYMD()?" today":"")+'">'
+     +'<div class="dnum">'+names[i]+' '+fmtDate(d)+'</div>';
+    ms.forEach(function(m){
+      var sb=subj(m.subject);
+      cells+='<div title="'+esc(m.title)+'"><span class="dot" style="background:'+(m.status==="done"?"var(--green)":m.status==="skipped"?"var(--dim)":"var(--amber)")+'"></span>'+esc(sb?sb.name:"")+'</div>';
+    });
+    cells+='<button class="btn sm ghost" style="margin-top:4px" onclick="newMissionDialog(\''+d+'\')">+</button></div>';
+  }
+  var planned=S.missions.filter(function(m){return m.date>=ws&&m.date<=addDays(ws,6);}).length;
+  return '<h2>This week — starting '+fmtDate(ws)+'</h2>'
+   +'<div class="card"><div class="row"><div class="col">'
+   +'<label>Intention for the week (what matters, in your words)</label>'
+   +'<textarea id="wkNote" onchange="saveWeekPlan(\''+ws+'\')">'+esc(plan.note)+'</textarea></div>'
+   +'<div class="col"><label>Target mission-days this week</label>'
+   +'<input type="number" id="wkTarget" value="'+plan.targetCount+'" onchange="saveWeekPlan(\''+ws+'\')">'
+   +'<div style="margin-top:8px">Progress: '+doneCt+' done / '+plan.targetCount+' target ('+planned+' on the calendar)</div>'
+   +routeProgressSVG(doneCt,plan.targetCount)+'</div></div></div>'
+   +'<div class="grid7 week7">'+cells+'</div>'
+   +'<div class="card" style="margin-top:14px"><h3>Weekly pulse — the metric that outranks all others</h3>'
+   +pulseWidget(ws)+'</div>';
+}
+function saveWeekPlan(ws){
+  S.weekPlans[ws]={note:$("wkNote").value, targetCount:+$("wkTarget").value||S.schedule.daysPerWeek};
+  save();
+}
+function pulseWidget(ws){
+  var p=null; S.pulse.forEach(function(x){if(x.week===ws)p=x;});
+  if(p) return '<p class="small">Willingness: <b>'+p.willing+'/5</b> · Your energy: <b>'+p.parentEnergy+'/5</b>'+(p.note?' — '+esc(p.note):'')+' <button class="btn sm ghost" onclick="pulseDialog(\''+ws+'\')">edit</button></p>';
+  return '<p class="small muted">Once a week, two questions: Is your child approaching missions <i>willingly</i>? And do <i>you</i> still enjoy running them? '
+   +'<button class="btn sm amber" onclick="pulseDialog(\''+ws+'\')">Take the pulse</button></p>';
+}
+function pulseDialog(ws){
+  openModal('<div class="steps">weekly pulse</div><h2>The north star check</h2>'
+   +'<label>Does '+esc(S.profile.childName||"your child")+' come willingly — even ask for missions? (1 = resists, 5 = asks for them)</label>'
+   +'<div class="chips" id="pWill">'+[1,2,3,4,5].map(function(i){return '<span class="chip" data-v="'+i+'" onclick="chipPick(this,\'pWill\')">'+i+'</span>';}).join("")+'</div>'
+   +'<label>Your own energy for this — honestly (1 = dreading it, 5 = fun)</label>'
+   +'<div class="chips" id="pEng">'+[1,2,3,4,5].map(function(i){return '<span class="chip" data-v="'+i+'" onclick="chipPick(this,\'pEng\')">'+i+'</span>';}).join("")+'</div>'
+   +'<label>Note</label><input type="text" id="pNote">'
+   +'<div style="margin-top:12px; display:flex; gap:8px;"><button class="btn amber" onclick="savePulse(\''+ws+'\')">Save</button>'
+   +'<button class="btn ghost" onclick="closeModal()">Cancel</button></div>');
+}
+function savePulse(ws){
+  S.pulse=S.pulse.filter(function(x){return x.week!==ws;});
+  S.pulse.push({week:ws, willing:+(chipVal("pWill")||3), parentEnergy:+(chipVal("pEng")||3), note:$("pNote").value});
+  save(); closeModal(); renderView();
+}
+function viewMonth(){
+  var now=new Date(), y=now.getFullYear(), mo=now.getMonth();
+  var mk=y+"-"+String(mo+1).padStart(2,"0");
+  var plan=S.monthPlans[mk]||{note:""};
+  var first=new Date(y,mo,1), startPad=(first.getDay()+6)%7, dim=new Date(y,mo+1,0).getDate();
+  var cells='';
+  for(var p=0;p<startPad;p++) cells+='<div class="daycell off"></div>';
+  for(var d=1;d<=dim;d++){
+    var ymd=mk+"-"+String(d).padStart(2,"0"), ms=missionsOn(ymd);
+    cells+='<div class="daycell'+(ymd===todayYMD()?" today":"")+'" style="cursor:pointer" onclick="dayDetail(\''+ymd+'\')" title="View this day">'
+      +'<div class="dnum">'+d+'</div>';
+    var bySubj={}, order=[];
+    ms.forEach(function(m){
+      if(!bySubj[m.subject]){bySubj[m.subject]={count:0,done:false,planned:false,skipped:false}; order.push(m.subject);}
+      bySubj[m.subject].count++; bySubj[m.subject][m.status]=true;
+    });
+    order.forEach(function(sid){
+      var info=bySubj[sid], sb=subj(sid);
+      var color=info.done?"var(--green)":(info.planned?"var(--amber)":"var(--dim)");
+      var short=sb?sb.name.split(" ")[0].replace("&",""):sid;
+      cells+='<div class="mday"><span class="dot" style="background:'+color+'"></span>'
+        +'<span class="mdlabel">'+esc(short)+(info.count>1?' ('+info.count+')':'')+'</span></div>';
+    });
+    cells+='</div>';
+  }
+  var mStart=mk+"-01", mEnd=mk+"-"+String(dim).padStart(2,"0");
+  var days=schoolDays(mStart,mEnd), mins=totalMinutes(mStart,mEnd);
+  return '<h2>'+monthName(mo)+' '+y+'</h2>'
+   +'<div class="card"><div class="row"><div class="col">'
+   +'<label>Month plan — themes, campaigns, trips, library weeks</label>'
+   +'<textarea id="moNote" onchange="saveMonthPlan(\''+mk+'\')">'+esc(plan.note)+'</textarea></div>'
+   +'<div class="col"><b>'+days+'</b> learning days · <b>'+(mins/60).toFixed(1)+'</b> hours logged this month'
+   +'<p class="muted small" style="margin-top:6px">Green dot = done, amber = planned, gray = skipped (skips cost nothing).</p></div></div></div>'
+   +'<div class="grid7 month7"><div class="daycell off">Mon</div><div class="daycell off">Tue</div><div class="daycell off">Wed</div><div class="daycell off">Thu</div><div class="daycell off">Fri</div><div class="daycell off">Sat</div><div class="daycell off">Sun</div>'+cells+'</div>';
+}
+function saveMonthPlan(mk){S.monthPlans[mk]={note:$("moNote").value}; save();}
+function dayDetail(ymd){
+  var ms=missionsOn(ymd);
+  var h='<div class="steps">mission day</div><h2>'+esc(fmtDate(ymd))+'</h2>';
+  if(ms.length===0){
+    h+='<div class="card muted">No missions logged this day. Rest days are real days.</div>';
+  } else {
+    ms.forEach(function(m){h+=missionCardHTML(m,true);});
+  }
+  h+='<div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">'
+   +'<button class="btn amber" onclick="closeModal(); newMissionDialog(\''+ymd+'\')">+ New mission this day</button>'
+   +'<button class="btn ghost" onclick="closeModal()">Close</button></div>';
+  openModal(h);
+}
+function viewQuarter(){
+  var h='<h2>Quarter — plan, ledger &amp; report</h2>';
+  if(S.quarters.length===0){
+    h+='<div class="card"><p class="muted">Define your quarters (NY-style reporting cadence: roughly Sep–Nov, Dec–Jan, Feb–Apr, May–Jun — or any split you like).</p>'
+     +'<button class="btn amber" onclick="newQuarterDialog()">+ New quarter</button></div>';
+    return h;
+  }
+  h+='<div style="margin-bottom:10px"><button class="btn ghost sm" onclick="newQuarterDialog()">+ New quarter</button></div>';
+  S.quarters.slice().reverse().forEach(function(q){
+    var days=schoolDays(q.start,q.end), mins=totalMinutes(q.start,q.end), hrs=(mins/60);
+    var map={}; SUBJECTS.forEach(function(sb){map[sb.id]=0;});
+    doneMissions().forEach(function(m){if(m.date>=q.start&&m.date<=q.end)map[m.subject]+=(m.minutes||20);});
+    S.extraLog.forEach(function(e){if(e.date>=q.start&&e.date<=q.end&&map[e.subject]!=null)map[e.subject]+=(+e.minutes||0);});
+    var covered=SUBJECTS.filter(function(sb){return map[sb.id]>0;}).length;
+    h+='<div class="card"><h3>'+esc(q.name)+' <span class="muted small">'+fmtDate(q.start)+' – '+fmtDate(q.end)+'</span></h3>'
+     +'<div class="row"><div class="col">'
+     +'<b>'+days+'</b> instructional days · <b>'+hrs.toFixed(1)+'</b> hours · <b>'+covered+'/'+SUBJECTS.length+'</b> subjects touched'
+     +'<p class="small muted">Superset pace check (full-year): 180 days, 900–1,080 hrs. A quarter ≈ 45 days / 225–270 hrs. Homeschool mode aims at pace; summer mode just keeps the record.</p>'
+     +'<label>Quarter goals</label><textarea onchange="saveQGoals(\''+q.id+'\',this.value)">'+esc(q.goals||"")+'</textarea>'
+     +'</div><div class="col">';
+    SUBJECTS.forEach(function(sb){
+      if(map[sb.id]>0) h+='<div class="small">'+sb.name+': '+(map[sb.id]/60).toFixed(1)+'h</div>';
+    });
+    h+='</div></div>'
+     +'<div style="margin-top:8px"><button class="btn sm amber" onclick="exportReport(\''+q.id+'\')">Generate quarterly report</button> '
+     +'<button class="btn sm ghost" onclick="deleteQuarter(\''+q.id+'\')">Delete</button></div></div>';
+  });
+  return h;
+}
+function newQuarterDialog(){
+  openModal('<div class="steps">new quarter</div><h2>Define a quarter</h2>'
+   +'<label>Name</label><input type="text" id="qName" placeholder="Summer 2026 / Q1 2026-27">'
+   +'<label>Start</label><input type="date" id="qStart" value="'+todayYMD()+'">'
+   +'<label>End</label><input type="date" id="qEnd" value="'+addDays(todayYMD(),90)+'">'
+   +'<div style="margin-top:12px; display:flex; gap:8px;"><button class="btn amber" onclick="doNewQuarter()">Create</button>'
+   +'<button class="btn ghost" onclick="closeModal()">Cancel</button></div>');
+}
+function doNewQuarter(){
+  S.quarters.push({id:uid(), name:$("qName").value||"Quarter", start:$("qStart").value, end:$("qEnd").value, goals:""});
+  save(); closeModal(); renderView();
+}
+function saveQGoals(id,v){S.quarters.forEach(function(q){if(q.id===id)q.goals=v;}); save();}
+function deleteQuarter(id){S.quarters=S.quarters.filter(function(q){return q.id!==id;}); save(); renderView();}
+/* Effort-framed proficiency words for the parent/board report (never shown to the child). */
+function levelWord(lv){
+  return ["—","just beginning","developing","progressing steadily","strong","advanced & independent"][lv]||"developing";
+}
+/* Board-ready quarterly report — built to the superset standard (NY/PA/MA/RI-grade)
+   per Alpha-Light-Blueprint/09-state-compliance.md, with a South Carolina summary. */
+function exportReport(qid){
+  var q=null; S.quarters.forEach(function(x){if(x.id===qid)q=x;}); if(!q) return;
+  var days=schoolDays(q.start,q.end), mins=totalMinutes(q.start,q.end), hrs=mins/60;
+  var prof=S.profile||{};
+  var grade=prof.age?Math.max(0,prof.age-5):null;
+  /* gather per-subject minutes, sessions, and dated activities (missions + logged learning) */
+  var data={}; SUBJECTS.forEach(function(sb){data[sb.id]={min:0,sessions:0,items:[]};});
+  doneMissions().forEach(function(m){
+    if(m.date>=q.start&&m.date<=q.end&&data[m.subject]){
+      data[m.subject].min+=(m.minutes||20); data[m.subject].sessions++;
+      var fn=m.feedback&&(m.feedback.note||m.feedback.childNote)?(" — "+(m.feedback.note||m.feedback.childNote)):"";
+      data[m.subject].items.push({date:m.date, text:m.title+fn});
+    }
+  });
+  S.extraLog.forEach(function(e){
+    if(e.date>=q.start&&e.date<=q.end&&data[e.subject]){
+      data[e.subject].min+=(+e.minutes||0); data[e.subject].sessions++;
+      data[e.subject].items.push({date:e.date, text:(e.note||"Logged learning")+" (logged activity)"});
+    }
+  });
+  var covered=SUBJECTS.filter(function(sb){return data[sb.id].min>0;});
+  var untouched=SUBJECTS.filter(function(sb){return data[sb.id].min===0;});
+  var totalSessions=0; SUBJECTS.forEach(function(sb){totalSessions+=data[sb.id].sessions;});
+  var methods=(prof.prefs&&prof.prefs.formats&&prof.prefs.formats.length)? prof.prefs.formats.join(", ")
+    : "interest-based mission design; hands-on activities, reading, projects, and real-world tasks";
+
+  var r="LANTERO — QUARTERLY HOMESCHOOL PROGRESS REPORT\n";
+  r+="Parent-maintained record · built to the superset standard (NY / PA / MA / RI-grade)\n";
+  r+="==================================================================\n\n";
+
+  r+="STUDENT & PERIOD\n";
+  r+="  Student: "+(prof.childName||"—")+"     Age: "+(prof.age||"—")+(grade!=null?"   (approx. grade "+grade+")":"")+"\n";
+  r+="  Instructor (parent): "+(prof.parentName||"—")+"   Qualification: HS diploma / GED (documentation retained by family)\n";
+  r+="  Reporting period: "+q.start+" to "+q.end+"   (Quarter: "+q.name+")\n";
+  r+="  Home state: "+(prof.usState||"—")+"\n\n";
+
+  r+="ATTENDANCE & INSTRUCTIONAL TIME  (RI/NY-grade time accounting)\n";
+  r+="  Instructional days this period: "+days+"\n";
+  r+="  Instructional hours this period: "+hrs.toFixed(1)+"\n";
+  r+="  Full-year targets for reference: 180 days · 900–1,080 hours (1,080 = ceiling case).\n";
+  r+="  Hours are parent-side bookkeeping derived from the activity log; they are never shown to the child as quotas.\n\n";
+
+  r+="SUBJECTS COVERED  (NY-union subject list)\n";
+  if(covered.length===0){ r+="  (No completed activity recorded for this period yet.)\n"; }
+  covered.forEach(function(sb){
+    var d=data[sb.id], p=S.prof[sb.id]||{level:2};
+    r+="\n  "+sb.name+" — "+(d.min/60).toFixed(1)+" hrs · "+d.sessions+" session(s)\n";
+    r+="    Progress: "+levelWord(p.level)+".\n";
+    r+="    Representative activities:\n";
+    d.items.sort(function(a,b){return a.date.localeCompare(b.date);}).forEach(function(it){
+      r+="      - "+fmtDate(it.date)+": "+it.text+"\n";
+    });
+  });
+  if(untouched.length){
+    r+="\n  Subjects not yet touched this period (planned for the upcoming period): "
+      +untouched.map(function(sb){return sb.name;}).join(", ")+"\n";
+  }
+  r+="\n  Overall methods & materials: "+methods+".\n\n";
+
+  r+="SAFETY & CITIZENSHIP MODULE  (superset annual extras)\n";
+  r+="  Safety / fire-prevention education (Health): "+(data.health.min>0?"addressed this period":"not yet this period — flag for annual coverage")+"\n";
+  r+="  Citizenship / U.S. Constitution / patriotism (Civics): "+(data.civics.min>0?"addressed this period":"not yet this period")+"\n\n";
+
+  r+="ASSESSMENT\n";
+  r+="  Method: narrative progress evaluation from the parent observation log.\n";
+  r+="  Grades 1–3: a narrative evaluation suffices. From grade 3 onward, standardized-test capability is available (CAT / ITBS / Stanford, parent-administered versions).\n";
+  r+="  Summary: the student engaged across "+covered.length+" subject area(s) this period, with effort-based progress as noted above.\n\n";
+
+  r+="PORTFOLIO\n";
+  r+="  Work samples / mission records retained this period: "+totalSessions+" logged session(s).\n";
+  r+="  Lantero mission records and printed mission scrolls form the portfolio index.\n\n";
+
+  r+="GOALS\n";
+  r+="  Goals for this period: "+(q.goals||"—")+"\n";
+  r+="  Goals for next period: ____________________________________________\n\n";
+
+  var scCore=[["reading","Reading"],["writing","Writing"],["math","Math"],["science","Science"],["social","Social studies"]];
+  var scCov=scCore.filter(function(c){return data[c[0]]&&data[c[0]].min>0;}).map(function(c){return c[1];});
+  var scMiss=scCore.filter(function(c){return !(data[c[0]]&&data[c[0]].min>0);}).map(function(c){return c[1];});
+  r+="—— SOUTH CAROLINA SUMMARY (home-state checklist) ——\n";
+  r+="  SC universal floor (all three options): parent HS diploma/GED · 180 instructional days/year · subjects: reading, writing, math, science, social studies (+ composition & literature in grades 7–12).\n";
+  r+="  This period: "+days+" instructional day(s) logged.\n";
+  r+="  SC core subjects covered: "+(scCov.length?scCov.join(", "):"none yet")+".\n";
+  if(scMiss.length) r+="  SC core not yet covered this period: "+scMiss.join(", ")+".\n";
+  r+="  Common SC path: Option 3 accountability association (semiannual progress reports, typically a portfolio, often no required testing). This document can serve as an Option 3 semiannual progress report.\n\n";
+
+  r+="Prepared by: ____________________________    Date: ______________\n";
+  r+="Generated by Lantero — parent-maintained records. Informational only, not legal advice; verify current requirements with HSLDA and the South Carolina Department of Education.\n";
+
+  openModal('<div class="steps">quarterly report</div><h2>'+esc(q.name)+'</h2>'
+   +'<p class="muted small">Built to the superset standard with a South Carolina summary. Copy into your association/district format, or print. Edit freely — you are the author of record.</p>'
+   +'<textarea style="min-height:340px" id="repText">'+esc(r)+'</textarea>'
+   +'<div style="margin-top:10px; display:flex; gap:8px;"><button class="btn amber" onclick="navigator.clipboard.writeText($(\'repText\').value).then(function(){alert(\'Copied.\')})">Copy</button>'
+   +'<button class="btn ghost" onclick="closeModal()">Close</button></div>');
+}
+function viewMissions(){
+  var h='<h2>Mission log</h2>';
+  var ms=S.missions.slice().sort(function(a,b){return (b.date||"").localeCompare(a.date||"");});
+  if(ms.length===0) return h+'<div class="card muted">No missions yet. Start on Today.</div>';
+  ms.forEach(function(m){h+=missionCardHTML(m,true);});
+  return h;
+}
+function viewSettings(){
+  var h='<h2>Settings &amp; re-tuning</h2>';
+  h+='<div class="card"><h3>Re-run any onboarding step (iterate as they grow)</h3><div class="chips">';
+  ["Season/mode","Explorer basics","Interests","How they learn","Levels","Life skills","Rhythm","Ledger"].forEach(function(n,i){
+    h+='<span class="chip" onclick="S.onboarded=true; startOnboarding({step:'+i+'})">'+n+'</span>';
+  });
+  h+='</div></div>';
+  h+='<div class="card"><h3>Subject balance targets</h3><p class="muted small">Relative weights — they define each subject\'s target share for the heat map and over-index detection.</p><table>';
+  SUBJECTS.forEach(function(sb){
+    h+='<tr><td>'+sb.name+' <span class="pill '+(sb.grp==="life"?"life":sb.grp==="core"?"core":"enrich")+'">'+sb.grp+'</span></td>'
+     +'<td style="width:90px"><input type="number" value="'+(S.targets[sb.id]||0)+'" onchange="S.targets[\''+sb.id+'\']=+this.value||0; save();"></td>'
+     +'<td class="small muted" style="width:70px">'+(100*targetShare(sb.id)).toFixed(0)+'%</td></tr>';
+  });
+  h+='</table><button class="btn sm ghost" style="margin-top:8px" onclick="applyModeTargets(); save(); renderView();">Reset to mode defaults</button></div>';
+  h+='<div class="card"><h3>Interests (weights adjust automatically from feedback)</h3><table>';
+  S.profile.interests.forEach(function(it,ix){
+    h+='<tr><td>'+esc(it.name)+'</td><td style="width:120px">weight '+it.weight.toFixed(1)+'</td>'
+     +'<td style="width:90px"><button class="btn sm ghost" onclick="S.profile.interests.splice('+ix+',1); save(); renderView();">remove</button></td></tr>';
+  });
+  h+='</table><div class="row" style="margin-top:8px"><input type="text" id="newInt" placeholder="add an interest" style="max-width:240px">'
+   +'<button class="btn sm" onclick="if($(\'newInt\').value){S.profile.interests.push({id:uid(),name:$(\'newInt\').value,weight:1,uses:0}); save(); renderView();}">Add</button></div></div>';
+  h+='<div class="card"><h3>Data</h3>'
+   +'<button class="btn sm" onclick="exportData()">Export backup (JSON)</button> '
+   +'<label style="display:inline-block; margin-left:6px;"><span class="btn sm ghost" style="display:inline-block">Import</span><input type="file" style="display:none" onchange="importData(this)"></label> '
+   +'<button class="btn sm ghost" onclick="if(confirm(\'Erase everything?\')){localStorage.removeItem(KEY); location.reload();}">Reset all</button>'
+   +'<p class="muted small" style="margin-top:6px">All data lives in this browser only. Nothing is sent anywhere. Export a backup now and then.</p></div>';
+  return h;
+}
+function exportData(){
+  var a=document.createElement("a");
+  a.href="data:application/json;charset=utf-8,"+encodeURIComponent(JSON.stringify(S,null,1));
+  a.download="lantero-backup-"+todayYMD()+".json"; a.click();
+  try{localStorage.setItem(KEY+"_lastBackup",todayYMD());}catch(e){}
+}
+/* A gentle, never-shaming nudge to export a backup; data lives only in this browser. */
+function backupNudge(){
+  if(loadError){
+    return '<div class="flag bad"><b>We couldn\'t read your last saved data</b>, so we\'ve started fresh — but a copy of the unreadable data was kept in this browser, just in case. '
+      +'<button class="btn sm ghost" onclick="downloadCorrupt()">Download the kept copy</button></div>';
+  }
+  var n=S.missions.length+(S.extraLog?S.extraLog.length:0);
+  if(n<6) return '';
+  var last=null; try{last=localStorage.getItem(KEY+"_lastBackup");}catch(e){}
+  var stale=!last || (last < addDays(todayYMD(),-14));
+  if(!stale) return '';
+  return '<div class="flag"><b>Keep your records safe.</b> Everything lives only in this browser. A good habit: export a backup now and then — especially before clearing your browser or switching devices. '
+    +'<button class="btn sm" onclick="exportData(); renderView();">Export backup</button></div>';
+}
+function downloadCorrupt(){
+  var raw=null; try{raw=localStorage.getItem(KEY+"_corrupt");}catch(e){}
+  if(!raw){alert("No kept copy was found.");return;}
+  var a=document.createElement("a");
+  a.href="data:application/json;charset=utf-8,"+encodeURIComponent(raw);
+  a.download="lantero-recovered-"+todayYMD()+".json"; a.click();
+}
+function importData(input){
+  var f=input.files[0]; if(!f) return;
+  var rd=new FileReader();
+  rd.onload=function(){try{S=migrate(JSON.parse(rd.result)); save(); location.reload();}catch(e){alert("Could not read that file.");}};
+  rd.readAsText(f);
+}
+
+/* ==SECTION:DASHBOARD== */
+function heatColor(r){
+  if(r===null) return "#cdc6b8";
+  if(r<0.35) return "#8d94a8";      /* dim — neglected */
+  if(r<0.8)  return "#e8c989";      /* warming */
+  if(r<=1.35) return "#e8a13d";     /* glowing — on target */
+  if(r<=2.0) return "#c97f1d";      /* hot — leaning heavy */
+  return "#b85c45";                 /* over-indexed */
+}
+function heatMapSVG(){
+  var cx=180, cy=180, r0=70, r1=160, n=SUBJECTS.length;
+  var svg='<svg viewBox="-55 -8 470 376" style="max-width:440px; width:100%;">';
+  for(var i=0;i<n;i++){
+    var sb=SUBJECTS[i];
+    var a0=(i/n)*2*Math.PI - Math.PI/2, a1=((i+1)/n)*2*Math.PI - Math.PI/2;
+    var gap=0.012;
+    a0+=gap; a1-=gap;
+    var ratio=coverageRatio(sb.id,21);
+    var x0=cx+r0*Math.cos(a0), y0=cy+r0*Math.sin(a0);
+    var x1=cx+r1*Math.cos(a0), y1=cy+r1*Math.sin(a0);
+    var x2=cx+r1*Math.cos(a1), y2=cy+r1*Math.sin(a1);
+    var x3=cx+r0*Math.cos(a1), y3=cy+r0*Math.sin(a1);
+    var large=(a1-a0)>Math.PI?1:0;
+    svg+='<path d="M'+x0.toFixed(1)+' '+y0.toFixed(1)+' L'+x1.toFixed(1)+' '+y1.toFixed(1)
+      +' A'+r1+' '+r1+' 0 '+large+' 1 '+x2.toFixed(1)+' '+y2.toFixed(1)
+      +' L'+x3.toFixed(1)+' '+y3.toFixed(1)
+      +' A'+r0+' '+r0+' 0 '+large+' 0 '+x0.toFixed(1)+' '+y0.toFixed(1)+' Z" fill="'+heatColor(ratio)+'" stroke="#f6efe3" stroke-width="1">'
+      +'<title>'+esc(sb.name)+": "+(ratio===null?"no activity yet":(100*ratio).toFixed(0)+"% of target attention (21 days)")+'</title></path>';
+    /* label */
+    var am=(a0+a1)/2, lr=r1+14;
+    var lx=cx+lr*Math.cos(am), ly=cy+lr*Math.sin(am);
+    var anchor=Math.cos(am)>0.3?"start":(Math.cos(am)<-0.3?"end":"middle");
+    var short=sb.name.split(" ")[0].replace("&","");
+    svg+='<text x="'+lx.toFixed(1)+'" y="'+ly.toFixed(1)+'" font-size="9" font-family="Bricolage Grotesque,sans-serif" fill="#33415F" text-anchor="'+anchor+'">'+esc(short)+'</text>';
+  }
+  svg+='<text x="'+cx+'" y="'+(cy-4)+'" text-anchor="middle" font-size="13" font-family="Young Serif,Georgia,serif" fill="#1F2A44">the lantern</text>'
+    +'<text x="'+cx+'" y="'+(cy+12)+'" text-anchor="middle" font-size="9" font-family="Space Mono,monospace" fill="#6F6757">last 21 days</text></svg>';
+  return svg;
+}
+function viewDash(){
+  var h='<h2>Dashboard — where is the light falling?</h2>';
+  h+='<div class="row"><div class="col card" style="text-align:center">'+heatMapSVG()
+   +'<div class="legend" style="justify-content:center">'
+   +'<span><span class="sw" style="background:#8d94a8"></span>dim (neglected)</span>'
+   +'<span><span class="sw" style="background:#e8c989"></span>warming</span>'
+   +'<span><span class="sw" style="background:#e8a13d"></span>glowing (on target)</span>'
+   +'<span><span class="sw" style="background:#b85c45"></span>over-indexed</span></div></div>';
+  /* over/under index lists */
+  var over=[],under=[];
+  var anyData=false;
+  SUBJECTS.forEach(function(sb){
+    var r=coverageRatio(sb.id,21);
+    if(r!==null){anyData=true; if(r>1.6)over.push([sb,r]); if(r<0.45)under.push([sb,r]);}
+  });
+  h+='<div class="col">';
+  if(!anyData){h+='<div class="card muted">Complete a few missions and the lantern lights up.</div>';}
+  else{
+    if(over.length){h+='<div class="card"><h3>Leaning heavy (over-indexing)</h3>';
+      over.sort(function(a,b){return b[1]-a[1];}).forEach(function(x){h+='<div class="flag">'+x[0].name+' is taking '+(100*x[1]).toFixed(0)+'% of its target share. Nothing wrong with love — but consider letting another subject ride this interest.</div>';});
+      h+='</div>';}
+    if(under.length){h+='<div class="card"><h3>Needs light</h3>';
+      under.forEach(function(x){h+='<div class="flag bad">'+x[0].name+' is dim. <button class="btn sm" onclick="addMission(generateMission({subject:\''+x[0].id+'\'})); go(\'today\')">Send a mission there</button></div>';});
+      h+='</div>';}
+    if(!over.length&&!under.length) h+='<div class="card"><div class="flag good">Beautifully balanced over the last 3 weeks.</div></div>';
+  }
+  /* proficiency */
+  h+='<div class="card"><h3>Proficiency (parent-side only)</h3><table>';
+  SUBJECTS.forEach(function(sb){
+    var p=S.prof[sb.id]||{level:2,struggle:0,advance:0};
+    var marker=p.struggle>=2?' <span class="mk wob">wobbling — redesign, don\'t push</span>':((p.advance>=2||(p.level>=4&&p.advance>=1))?' <span class="mk rdy">ready for more</span>':'');
+    h+='<tr><td>'+sb.name+'</td><td>'+levelDots(p.level)+marker+'</td></tr>';
+  });
+  h+='</table></div></div></div>';
+  /* pulse history */
+  if(S.pulse.length){
+    h+='<div class="card"><h3>North-star pulse history</h3><table><tr><th>Week of</th><th>Willingness</th><th>Your energy</th><th>Note</th></tr>';
+    S.pulse.slice().sort(function(a,b){return b.week.localeCompare(a.week);}).forEach(function(p){
+      h+='<tr><td>'+fmtDate(p.week)+'</td><td>'+p.willing+'/5</td><td>'+p.parentEnergy+'/5</td><td>'+esc(p.note||"")+'</td></tr>';
+    });
+    h+='</table><p class="muted small" style="margin-top:6px">If willingness trends down two weeks running: pause, shrink, re-wrap. The plan serves the child, never the reverse.</p></div>';
+  }
+  return h;
+}
+
+/* ================= BOOT ================= */
+var TABS=[["today","Today"],["week","Week"],["month","Month"],["quarter","Quarter"],["missions","Missions"],["dash","Dashboard"],["settings","Settings"]];
+var currentTab="today";
+function renderNav(){
+  $("nav").innerHTML=TABS.map(function(t){
+    return '<button class="'+(currentTab===t[0]?"active":"")+'" onclick="go(\''+t[0]+'\')">'+t[1]+'</button>';
+  }).join("");
+}
+function go(tab){currentTab=tab; renderNav(); renderView();}
+function renderView(){
+  var v=$("view");
+  if(currentTab==="today") v.innerHTML=viewToday();
+  else if(currentTab==="week") v.innerHTML=viewWeek();
+  else if(currentTab==="month") v.innerHTML=viewMonth();
+  else if(currentTab==="quarter") v.innerHTML=viewQuarter();
+  else if(currentTab==="missions") v.innerHTML=viewMissions();
+  else if(currentTab==="dash") v.innerHTML=viewDash();
+  else if(currentTab==="settings") v.innerHTML=viewSettings();
+  var hooks=v.querySelectorAll("[data-hook]");
+  for(var i=0;i<hooks.length;i++){var fn=window[hooks[i].getAttribute("data-hook")]; if(fn) fn(hooks[i]);}
+}
+function openModal(html){$("modalBox").innerHTML=html; $("modalBack").classList.add("open");}
+function closeModal(){$("modalBack").classList.remove("open");}
+function openFeedback(){
+  var body="Thanks for trying Lantero! A few prompts (answer any you like):\n\n"
+    +"- What did your child think of the missions?\n"
+    +"- What felt useful, and what was confusing?\n"
+    +"- Did anything not work on your phone or computer?\n"
+    +"- What would make you keep using it?\n\n"
+    +"Tip: you can attach a backup from Settings > Data (Export backup) so I can see your setup.\n";
+  window.location.href="mailto:prokennedy@gmail.com?subject="+encodeURIComponent("Lantero feedback")+"&body="+encodeURIComponent(body);
+}
+function boot(){
+  load(); initProf();
+  if(Object.keys(S.targets).length===0) applyModeTargets();
+  $("hdrWho").textContent=S.profile.childName? (S.profile.childName+" · "+({homeschool:"Homeschool",summer:"Summer",afterschool:"After-school"})[S.profile.mode]) : "";
+  renderNav();
+  if(!S.onboarded){startOnboarding();} else {renderView();}
+}
+document.addEventListener("DOMContentLoaded",boot);
+</script>
+</body>
+</html>
