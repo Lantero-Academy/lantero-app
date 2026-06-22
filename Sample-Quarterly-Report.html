@@ -1,0 +1,224 @@
+
+<!doctype html><html><head><meta charset="utf-8"><title>Lantero — Sample Quarterly Report</title><style>@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Young+Serif&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Space+Mono:wght@400;700&display=swap');
+@page {
+  size: Letter; margin: 14mm 14mm 16mm 14mm;
+  @bottom-center {
+    content: "Lantero  ·  Sample Quarterly Progress Report  ·  page " counter(page) " of " counter(pages);
+    font-family: 'Space Mono','DejaVu Sans Mono',monospace; font-size: 7pt; color: #6F6757; letter-spacing: .2px;
+  }
+}
+* { box-sizing: border-box; }
+body { font-family: 'Source Serif 4', Georgia, serif; color: #2B2620; font-size: 9.4pt; line-height: 1.5; background: #F6EFE3; }
+h1,h2,h3 { font-family: 'Bricolage Grotesque','DejaVu Sans',sans-serif; color: #1F2A44; margin: 0; font-weight:700; }
+.mono { font-family:'Space Mono','DejaVu Sans Mono',monospace; }
+.small { font-size: 8pt; color: #6F6757; }
+.muted { color: #6F6757; }
+a { color: #C97F1D; }
+
+.masthead { display:flex; align-items:center; gap:12px; border-bottom: 2.5px solid #C97F1D; padding-bottom: 10px; }
+.wordmark { font-family:'Bricolage Grotesque','DejaVu Sans',sans-serif; font-weight:800; font-size: 21pt; letter-spacing: 6px; color:#1F2A44; line-height:1; }
+.tagline { font-family:'Space Mono','DejaVu Sans Mono',monospace; font-size: 6.6pt; color:#C97F1D; letter-spacing: 2px; margin-top:3px; }
+.sample-flag { font-family:'Bricolage Grotesque','DejaVu Sans',sans-serif; display:inline-block; background:#1F2A44; color:#F6EFE3; font-size:7pt; font-weight:600; letter-spacing:1.5px; padding: 3px 9px; border-radius: 6px; text-transform:uppercase; }
+.doc-title { margin-top: 14px; }
+.doc-title h1 { font-size: 19pt; letter-spacing: .2px; }
+.doc-meta { margin-top: 5px; font-size: 8.6pt; color:#4a4536; }
+.doc-meta b { color:#2B2620; }
+
+.cards { display:flex; gap:8px; margin: 14px 0 4px; }
+.card { flex:1; background:#FFFDF8; border:1px solid #DCCFB4; border-top:3px solid #C97F1D; border-radius:8px; padding:9px 11px; box-shadow: 0 1px 0 rgba(43,38,32,.06); }
+.card .k { font-family:'Bricolage Grotesque','DejaVu Sans',sans-serif; font-size:7pt; font-weight:600; text-transform:uppercase; letter-spacing:.7px; color:#6F6757; }
+.card .v { font-family:'Space Mono','DejaVu Sans Mono',monospace; font-size:17pt; color:#1F2A44; font-weight:700; line-height:1.1; margin:3px 0 1px; }
+.card .n { font-size:7.6pt; color:#5F8C5A; }
+
+.section { margin-top: 16px; }
+.section > h2 { font-size: 12pt; border-bottom:1px solid #DCCFB4; padding-bottom:3px; margin-bottom:7px; }
+.section .lead { font-size: 8.7pt; color:#4a4536; margin: 0 0 7px; }
+
+table { width:100%; border-collapse: collapse; font-size: 8.5pt; }
+th { font-family:'Bricolage Grotesque','DejaVu Sans',sans-serif; text-align:left; background:#EFE5D2; color:#1F2A44; font-size:7.3pt; font-weight:600; text-transform:uppercase; letter-spacing:.5px; padding:5px 7px; border-bottom:1.5px solid #DCCFB4; }
+td { padding:5px 7px; border-bottom:1px solid #E6DBC3; vertical-align:top; }
+tr:nth-child(even) td { background:#FBF6EA; }
+td.num, th.num { text-align:right; white-space:nowrap; font-family:'Space Mono','DejaVu Sans Mono',monospace; }
+.total-row td { font-weight:700; background:#EFE5D2 !important; border-top:1.5px solid #DCCFB4; }
+.total-row td.num { font-family:'Space Mono','DejaVu Sans Mono',monospace; }
+
+.pill { display:inline-block; font-family:'Bricolage Grotesque','DejaVu Sans',sans-serif; font-size:7pt; font-weight:600; padding:2px 7px; border-radius:16px; white-space:nowrap; }
+.met { background:#E4EEDD; color:#3f6b3a; border:1px solid #A9C7A2; }
+.partial { background:#FBEACB; color:#9a6516; border:1px solid #E3C488; }
+
+.dot { display:inline-block; width:8px;height:8px;border-radius:50%; margin-right:5px; }
+.d-fluent{background:#5F8C5A;} .d-secure{background:#C97F1D;} .d-dev{background:#E8A13D;} .d-emerg{background:#E8C989;}
+
+.cols { display:flex; gap:12px; }
+.col { flex:1; background:#FFFDF8; border:1px solid #DCCFB4; border-radius:8px; padding:10px 13px; }
+.col h3 { font-size:9.8pt; margin-bottom:5px; }
+.col ul { margin:0; padding-left:16px; }
+.col li { margin-bottom:3px; }
+
+.callout { background:#1F2A44; color:#F1E7CF; border-radius:8px; padding:13px 15px; margin-top:8px; }
+.callout h3 { font-family:'Young Serif','DejaVu Serif',serif; font-weight:400; color:#F7C873; font-size:11pt; margin-bottom:6px; }
+.callout p { margin:0 0 6px; font-size:8.7pt; line-height:1.5; }
+.callout .ok { color:#bcd6a6; font-weight:600; }
+.callout .flag { color:#F7C873; font-weight:600; }
+
+.guard { background:#FFFDF8; border-left:4px solid #C97F1D; padding:9px 12px; font-size:8.2pt; color:#4a4536; margin-top:8px; border-radius:0 6px 6px 0; box-shadow:0 1px 0 rgba(43,38,32,.05); }
+.disclaim { margin-top:14px; padding-top:8px; border-top:1px solid #DCCFB4; font-size:7.6pt; color:#6F6757; line-height:1.45; }
+.units { columns:2; column-gap:18px; font-size:8.6pt; }
+.units div { margin-bottom:3px; break-inside:avoid; }
+.check { color:#5F8C5A; font-weight:700; }
+.avoid-break { break-inside: avoid; }
+</style></head><body>
+<div class="masthead">
+  
+<svg width="30" height="35" viewBox="0 0 120 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <g stroke="#E8A13D" stroke-width="2" stroke-linecap="round">
+    <line x1="60" y1="118" x2="60" y2="126"/><line x1="89" y1="106" x2="94.6" y2="111.6"/>
+    <line x1="101" y1="77" x2="109" y2="77"/><line x1="89" y1="48" x2="94.6" y2="42.4"/>
+    <line x1="31" y1="48" x2="25.4" y2="42.4"/><line x1="19" y1="77" x2="11" y2="77"/>
+    <line x1="31" y1="106" x2="25.4" y2="111.6"/>
+  </g>
+  <circle cx="60" cy="20" r="8" stroke="#1F2A44" stroke-width="3.5"/>
+  <path d="M52 36 L54 29 H66 L68 36 Z" fill="#1F2A44"/>
+  <path d="M46 36 H74" stroke="#1F2A44" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M48 36 L72 36 L80 48 L80 100 Q80 106 74 106 L46 106 Q40 106 40 100 L40 48 Z" stroke="#1F2A44" stroke-width="3.5" stroke-linejoin="round" fill="none"/>
+  <path d="M60 54 L64.2 67.8 L78 72 L64.2 76.2 L60 90 L55.8 76.2 L42 72 L55.8 67.8 Z" fill="#E8A13D"/>
+  <path d="M34 118 H86" stroke="#1F2A44" stroke-width="3.5" stroke-linecap="round"/>
+</svg>
+
+  <div style="flex:1"><div class="wordmark">LANTERO</div><div class="tagline">EVERY WHEN · EVERY WHERE</div></div>
+  <div style="text-align:right"><span class="sample-flag">Sample · for feedback</span></div>
+</div>
+<div class="doc-title">
+  <h1>Quarterly Progress &amp; Compliance Report</h1>
+  <div class="doc-meta">
+    Learner: <b>Maya R.</b> (age 9, Grade 4) &nbsp;•&nbsp; Instructor of record: <b>J. Rivera</b> (HS diploma on file)<br/>
+    Home state: <b>New York</b> &nbsp;•&nbsp; School year <b>2025–2026</b> &nbsp;•&nbsp; Reporting period: <b>Q4 / Year-End — Apr 1 to Jun 13, 2026</b> &nbsp;•&nbsp; Report <b>4 of 4</b> &nbsp;•&nbsp; Issued Jun 15, 2026
+  </div>
+</div>
+<div class="cards">
+  <div class="card"><div class="k">Instructional days</div><div class="v">181</div><div class="n">Target 180 · Met</div></div>
+  <div class="card"><div class="k">Instruction hrs (yr)</div><div class="v">947</div><div class="n">NY 900 · Met (105%)</div></div>
+  <div class="card"><div class="k">Subjects covered</div><div class="v">All</div><div class="n">NY-union list · Met</div></div>
+  <div class="card"><div class="k">Annual assessment</div><div class="v">78<span style="font-size:9pt">th</span></div><div class="n">composite %ile · Met</div></div>
+</div>
+<p class="small muted" style="margin-top:6px">This quarter added <b>231 hours</b> over <b>44 instructional days</b>. Subject hours below are school-year cumulative. Hours are derived automatically from the family's activity log — never from any timer shown to the child.</p>
+
+<div class="section">
+  <h2>1 · Subject coverage &amp; progress</h2>
+  <p class="lead">Every Lantero mission is pre-tagged to subject areas, so coverage accrues from ordinary play. Progress is a parent-side read of fluency — not a grade, and not shown to the child.</p>
+  <table>
+    <thead><tr><th>Subject</th><th class="num">Hrs (yr)</th><th>This quarter — substantive summary</th><th>Progress</th></tr></thead>
+    <tbody>
+      <tr><td>Reading &amp; Literature</td><td class="num">120</td><td>Read 4 chapter books as "expedition logs"; oral fluency and retell strong.</td><td><span class="dot d-fluent"></span>Fluent</td></tr>
+      <tr><td>Spelling &amp; Word Study</td><td class="num">36</td><td>Spaced playful retrieval of pattern families; r-controlled vowels secured.</td><td><span class="dot d-secure"></span>Secure</td></tr>
+      <tr><td>Writing &amp; Composition</td><td class="num">78</td><td>Six-page illustrated story; first multi-paragraph report on habitats.</td><td><span class="dot d-dev"></span>Developing</td></tr>
+      <tr><td>Mathematics</td><td class="num">132</td><td>Multiplication facts fluent; introduced fractions &amp; area via base-design missions.</td><td><span class="dot d-fluent"></span>Fluent</td></tr>
+      <tr><td>Science</td><td class="num">96</td><td>Life-science unit; ran 5 backyard experiments with prediction &amp; record.</td><td><span class="dot d-fluent"></span>Fluent</td></tr>
+      <tr><td>Geography</td><td class="num">40</td><td>Mapped 5 "territories"; latitude/longitude and map-key skills.</td><td><span class="dot d-dev"></span>Developing</td></tr>
+      <tr><td>U.S. History &amp; Civics</td><td class="num">70</td><td>Colonial-era unit; branches of government via "the Society's charter."</td><td><span class="dot d-dev"></span>Developing</td></tr>
+      <tr><td>Citizenship &amp; Constitution (US + NY)</td><td class="num">22</td><td>U.S. Constitution + NY State module completed (state slot).</td><td><span class="dot d-secure"></span>Secure</td></tr>
+      <tr><td>Health &amp; Safety Education</td><td class="num">48</td><td>Includes fire/arson prevention, bicycle &amp; highway safety, substance-abuse prevention.</td><td><span class="dot d-secure"></span>Secure</td></tr>
+      <tr><td>Music</td><td class="num">24</td><td>Rhythm &amp; listening; began recorder.</td><td><span class="dot d-dev"></span>Developing</td></tr>
+      <tr><td>Visual Arts</td><td class="num">40</td><td>Field-journal illustration; map cartography; clay.</td><td><span class="dot d-fluent"></span>Fluent</td></tr>
+      <tr><td>Physical Education</td><td class="num">96</td><td>Cycling, swimming, movement missions (logged, never timed for the child).</td><td><span class="dot d-fluent"></span>Fluent</td></tr>
+      <tr><td>Practical Arts &amp; Library Skills</td><td class="num">28</td><td>Used the library catalog; cooking-math; simple repairs.</td><td><span class="dot d-dev"></span>Developing</td></tr>
+      <tr><td>Life skills (6 strands)*</td><td class="num">117</td><td>Public speaking, financial literacy, entrepreneurship, courage &amp; confidence, conflict resolution, independent thinking.</td><td><span class="dot d-dev"></span>Developing</td></tr>
+      <tr class="total-row"><td>Total</td><td class="num">947</td><td colspan="2">Across 181 instructional days · 21 subject strands</td></tr>
+    </tbody>
+  </table>
+  <p class="small muted" style="margin-top:5px">* Life skills are first-class subjects in Lantero. They are logged for the family's benefit and do not count toward, or against, any state's required hour minimums.</p>
+  <p class="small muted">Progress key: <span class="dot d-emerg"></span>Emerging &nbsp; <span class="dot d-dev"></span>Developing &nbsp; <span class="dot d-secure"></span>Secure &nbsp; <span class="dot d-fluent"></span>Fluent — a parent-facing read, qualitative by design.</p>
+</div>
+
+<div class="section avoid-break">
+  <h2>2 · Required topical units (state mandates)</h2>
+  <p class="lead">New York, Pennsylvania, and Rhode Island each require specific topical instruction. All are covered this year:</p>
+  <div class="units">
+    <div><span class="check">&#10003;</span> Fire &amp; arson prevention (annual)</div>
+    <div><span class="check">&#10003;</span> Patriotism &amp; citizenship</div>
+    <div><span class="check">&#10003;</span> U.S. Constitution</div>
+    <div><span class="check">&#10003;</span> NY State history &amp; constitution</div>
+    <div><span class="check">&#10003;</span> Highway &amp; bicycle safety</div>
+    <div><span class="check">&#10003;</span> Substance-abuse prevention</div>
+    <div><span class="check">&#10003;</span> Physical health &amp; hygiene</div>
+    <div><span class="check">&#10003;</span> Library / research skills</div>
+  </div>
+</div>
+
+<div class="section avoid-break">
+  <h2>3 · Annual assessment</h2>
+  <p class="lead">New York requires a standardized test in alternating years for grades 4–8. Administered once, at home, low-stakes, with no test-prep drilling — consistent with Lantero's mission rules.</p>
+  <table>
+    <thead><tr><th>Instrument</th><th class="num">Reading</th><th class="num">Math</th><th class="num">Language</th><th class="num">Science</th><th class="num">Composite</th><th>State threshold</th></tr></thead>
+    <tbody><tr><td>Iowa Assessments, Form E (May 2026, parent-administered)</td><td class="num">81%ile</td><td class="num">76%ile</td><td class="num">74%ile</td><td class="num">80%ile</td><td class="num"><b>78%ile</b></td><td><span class="pill met">Met — NY needs &#8805; 33rd %ile</span></td></tr></tbody>
+  </table>
+  <p class="small muted" style="margin-top:5px">Percentiles appear here because the state requires this measure for the file. They are not how Lantero gauges learning day to day — that is the willingness pulse below — and they are never shown to the child.</p>
+</div>
+
+<div class="section avoid-break">
+  <h2>4 · The learner &amp; the guide</h2>
+  <div class="cols">
+    <div class="col"><h3>The learner — wellbeing (parent-side)</h3><ul>
+      <li><b>Willingness (north star):</b> approaches learning willingly — positive in 11 of 13 weeks, trend up.</li>
+      <li><b>Unprompted mission requests:</b> increasing month over month.</li>
+      <li><b>Frustration recovery:</b> faster; parent intervening less often.</li>
+      <li><b>Identity:</b> "I'm someone who figures things out" — observed in her own words.</li>
+    </ul></div>
+    <div class="col"><h3>The guide — sustainability</h3><ul>
+      <li><b>Missions run this quarter:</b> 58</li>
+      <li><b>Average prep time:</b> 4 min per mission (target &#8804; 5)</li>
+      <li><b>Logging completeness:</b> 100% of instructional days</li>
+      <li><b>"Is this still fun for me?":</b> Yes</li>
+    </ul></div>
+  </div>
+  <div class="guard"><b>Constitutional guard.</b> This is a parent-side export. No part of this report — no score, percentage, ranking, or streak — is shown to the child. The child is never the dashboard's subject.</div>
+</div>
+
+<div class="section avoid-break">
+  <h2>5 · State requirements coverage — the superset view</h2>
+  <p class="lead">Lantero keeps records against a <b>superset standard</b> — the union of the strictest states (MA, NY, PA, RI). Meet the superset and you meet, in substance, every state. Your own state's column is highlighted.</p>
+  <table>
+    <thead><tr><th>Requirement</th><th>MA</th><th style="background:#E3D4B2">NY (home)</th><th>PA</th><th>RI</th><th>SC</th><th>This record</th></tr></thead>
+    <tbody>
+      <tr><td>Written education plan</td><td>School-committee approvable</td><td style="background:#F3E9D2">IHIP</td><td>Affidavit + objectives</td><td>Local approval</td><td>Assoc. enrollment</td><td><span class="pill met">On file (MA-grade)</span></td></tr>
+      <tr><td>Instructional days</td><td>180</td><td style="background:#F3E9D2">180</td><td>180</td><td>180</td><td>180</td><td><span class="pill met">181 · Met</span></td></tr>
+      <tr><td>Instruction hours</td><td>~900</td><td style="background:#F3E9D2">900</td><td>900–990</td><td>1,080</td><td>—</td><td><span class="pill met">947 · NY/PA/MA</span> <span class="pill partial">RI 88%</span></td></tr>
+      <tr><td>Subject coverage</td><td>Broad</td><td style="background:#F3E9D2">Broadest (union)</td><td>Broad</td><td>Broad + civics</td><td>Core 5</td><td><span class="pill met">Full union · Met</span></td></tr>
+      <tr><td>Records / portfolio</td><td>Records</td><td style="background:#F3E9D2">Records</td><td>Evaluator portfolio</td><td>Records</td><td>Portfolio</td><td><span class="pill met">Portfolio attached</span></td></tr>
+      <tr><td>Reporting cadence</td><td>At review</td><td style="background:#F3E9D2">4 quarterly + annual</td><td>Annual</td><td>District-set</td><td>Semiannual</td><td><span class="pill met">Report 4 of 4</span></td></tr>
+      <tr><td>Assessment</td><td>Plan-defined</td><td style="background:#F3E9D2">Test alt. yrs 4–8</td><td>Tests gr 3/5/8</td><td>District-set</td><td>Every other yr</td><td><span class="pill met">78%ile · Met</span></td></tr>
+      <tr><td>Instructor qualification</td><td>Reviewed</td><td style="background:#F3E9D2">None stated</td><td>HS diploma/GED</td><td>None stated</td><td>HS diploma/GED</td><td><span class="pill met">Diploma on file</span></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section avoid-break">
+  <h2>6 · Differences &amp; gaps</h2>
+  <div class="callout">
+    <h3>Where this record stands</h3>
+    <p><span class="ok">Your state (New York): all current-year requirements are met.</span> The IHIP, the four quarterly reports, the 900-hour minimum, the full subject list, and the grade-4 assessment are each satisfied.</p>
+    <p><b>Beyond New York,</b> the same record also satisfies <span class="ok">Massachusetts</span> (an approvable education plan), <span class="ok">Pennsylvania</span> (an evaluator-ready portfolio + grade-appropriate testing), and <span class="ok">South Carolina</span> (Option 3, association path).</p>
+    <p><span class="flag">One difference to know:</span> Rhode Island's 1,080-hour ceiling is the highest in the country. At 947 hours you are at <b>88%</b> of it. New York does not require this — it is flagged only so you'd know the single item to top up if you ever moved to RI.</p>
+    <p style="margin-bottom:0"><b>Net:</b> this family could relocate to any U.S. state and remain substantively compliant, with RI's extra hours the only gap.</p>
+  </div>
+</div>
+
+<div class="section avoid-break">
+  <h2>7 · Portfolio index — the Trove</h2>
+  <p class="lead">Work samples accumulate naturally from missions. A full portfolio (PA-grade, evaluator-ready) accompanies this report; selected items:</p>
+  <table>
+    <thead><tr><th>Subject</th><th>Representative work samples</th></tr></thead>
+    <tbody>
+      <tr><td>Reading &amp; Writing</td><td>"Dino Coast" field journal (14 entries); 6-page illustrated cipher story</td></tr>
+      <tr><td>Mathematics</td><td>Moon-base supply ledger (multiplication); fraction "treasure split" worksheets</td></tr>
+      <tr><td>Science</td><td>Backyard bug census; shadow-tracking log; water-flow experiment notes</td></tr>
+      <tr><td>Social Studies</td><td>Hand-drawn expedition map of 5 territories; "Society charter" (branches of gov't)</td></tr>
+      <tr><td>Arts &amp; Practical</td><td>Cartography plates; clay specimens; recipe-doubling math</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="disclaim">
+  <b>Informational, not legal advice.</b> Homeschool statutes and district practices vary by location and change over time; Rhode Island figures are the national ceiling case, not a New York requirement. Verify your obligations against <b>HSLDA's state pages</b> and your state education department before filing. This report was generated by Lantero from the family's own activity log and is fully editable before submission. All data stays on the family's device. &nbsp; <i>This is a sample with fictional data, shared to gather feedback on format and usefulness.</i>
+</div>
+</body></html>
