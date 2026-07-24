@@ -243,7 +243,8 @@ function defaultState(){
     monthPlans:{}, /* "YYYY-MM" -> {note} */
     quarters:[], /* {id,name,start,end,goals} */
     pulse:[], /* {week, willing:1-5, parentEnergy:1-5, note} */
-    extraLog:[] /* {date, minutes, subject, note} manual entries */
+    extraLog:[], /* {date, minutes, subject, note} manual entries */
+    activities:[] /* {id,date,description,subjects:[ids],minutes,analysis} — portfolio/standards write-ups */
   };
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
@@ -351,23 +352,23 @@ pe:[
 art:[
  {t:"Official {I} Portrait",hook:"The Society hall needs an official portrait from the world of {I}, by artist {C}.",scene:"There is an empty frame on the wall of the Society hall, and it has been waiting a long time for an official portrait from the world of {I} — to be painted by the artist {C}. Setting the scene: study one real example together for inspiration first (every master began by copying), then let {C} make their own version, and hold a genuine frame-and-hang ceremony when it's finished.",goal:"One finished artwork, signed, hung somewhere real.",mat:"Any medium they love.",steps:"Look at one real example for inspiration (book/photo), then make their own version. Frame-and-hang ceremony matters.",easy:"Trace or copy with pride — masters copied first.",hard:"Add a background that tells a story; explain the choices at the hanging."}],
 music:[
- {t:"The {I} Anthem",hook:"Every expedition has an anthem. The {I} crew's is unwritten — until today.",scene:"Every great expedition marches to an anthem of its own, and the {I} crew has somehow sailed this far without one — until tonight, when {C} composes it. Setting the scene: borrow a tune {C} already knows, rewrite the words about {I} together, then perform it twice with full spirit and record it on your phone for the Society archive.",goal:"Compose/perform a short anthem (made-up words to a known tune counts fully).",mat:"Voice; pots and pans percussion welcome.",steps:"Pick a tune they know, rewrite words about {I} together, perform it twice, record it on your phone for the archive.",easy:"You draft lines, {C} fills in rhyming words.",hard:"{C} adds a rhythm part and teaches you your part."}],
+ {t:"The {I} Anthem",hook:"Every expedition has an anthem. The {I} crew's is unwritten — until today.",scene:"Every great expedition marches to an anthem of its own, and the {I} crew has somehow sailed this far without one — until tonight, when {C} composes it. Setting the scene: borrow a tune {C} already knows, rewrite the words about {I} together, then perform it twice with full spirit and record it on your phone for the Society archive.",goal:"Compose/perform a short anthem (made-up words to a known tune counts fully).",mat:"Voice; pots and pans percussion welcome.",steps:"Pick a tune they know, rewrite words about {I} together, perform it twice, record it on your phone for the archive.",easy:"You draft lines, {C} fills in rhyming words.",hard:"{C} adds a rhythm part and teaches you your part.",coach:"You do not need to be musical for this. Step 1 - pick a tune {C} already knows cold (Twinkle Twinkle, Happy Birthday, or a favourite show theme). Step 2 - sing one line the normal way together, then say: 'let's swap the words to be about {I}.' Give the first new line yourself as the example, then let them do the next. Step 3 - sing the whole made-up anthem twice, loud and proud, and record it on your phone 'for the Society archive.' If stuck: offer two word-choices for the next line ('should the {I} sail or should it fly?') so they are choosing, not inventing from a blank page."}],
 spanish:[
- {t:"Capitan {C}: {I} en espanol",hook:"The {I} crew speaks Spanish on Tuesdays. Captain {C} must give the orders.",scene:"Aboard this ship there's an old tradition: on Tuesdays the {I} crew speaks only Spanish, and every order falls to Capitan {C}. No memorizing, no worksheets — just real sentences, built one block at a time and spoken right out loud. Setting the scene: you carry the structure ('Quiero...'), {C} builds the sentence, then you swap in {I} words and keep the whole thing playful and quick.",goal:"Build and SAY 5+ real sentences from blocks. No memorizing, no writing.",mat:"None. (Michel Thomas style: you carry the structure, they build.)",steps:"Give one block: 'Quiero...' (I want). Ask: how would the captain say 'I want the map'? They build: 'Quiero el mapa.' Swap objects ({I} words!), then add 'No quiero...'. Always speaking, always playful.",easy:"3 sentences, you say it first, they echo then swap one word.",hard:"Add a second block ('Vamos a...' - we are going to) and chain them."},
- {t:"Spanish Treasure Words",hook:"5 treasure words about {I} are hidden in the house — but they only unlock in Spanish.",scene:"Five treasure words about {I} have been hidden around the house, and every one of them is locked tight — they open only when spoken aloud in Spanish. {C} is the one sent to find them. Setting the scene: hide sticky notes that pair a picture with the Spanish word, and rule that each note found must be used in a spoken sentence frame you supply before it counts as claimed.",goal:"Use all 5 words in spoken sentences during a treasure hunt.",mat:"5 sticky notes with picture + Spanish word, hidden.",steps:"Each found note must be used in a sentence frame you supply ('Veo un...' - I see a). Old words from past hunts can resurface as bonus treasure (spaced review, disguised).",easy:"Echo the word in the frame.",hard:"They build the sentence solo and add one adjective."}],
+ {t:"Capitan {C}: {I} en espanol",hook:"The {I} crew speaks Spanish on Tuesdays. Captain {C} must give the orders.",scene:"Aboard this ship there's an old tradition: on Tuesdays the {I} crew speaks only Spanish, and every order falls to Capitan {C}. No memorizing, no worksheets — just real sentences, built one block at a time and spoken right out loud. Setting the scene: you carry the structure ('Quiero...'), {C} builds the sentence, then you swap in {I} words and keep the whole thing playful and quick.",goal:"Build and SAY 5+ real sentences from blocks. No memorizing, no writing.",mat:"None. (Michel Thomas style: you carry the structure, they build.)",steps:"Give one block: 'Quiero...' (I want). Ask: how would the captain say 'I want the map'? They build: 'Quiero el mapa.' Swap objects ({I} words!), then add 'No quiero...'. Always speaking, always playful.",easy:"3 sentences, you say it first, they echo then swap one word.",hard:"Add a second block ('Vamos a...' - we are going to) and chain them.",coach:"You do not need to know Spanish - every word you need is right here. Step 1 - give the block out loud: 'Quiero' means 'I want.' Say it; have {C} echo it once. Step 2 - hand them a target: 'How would the captain say I want the map?' They build it: 'Quiero el mapa.' Step 3 - swap in {I} words and let them build three or four more, always spoken, never written. Step 4 - add the flip-block 'No quiero' (I do not want) and let them turn one sentence around. The words: quiero (I want), no quiero (I don't want), el mapa (the map), el tesoro (the treasure), el barco (the boat), la isla (the island), el oro (the gold). If stuck: say the whole sentence first and have them echo it, then change just one word so they only build one new piece at a time."},
+ {t:"Spanish Treasure Words",hook:"5 treasure words about {I} are hidden in the house — but they only unlock in Spanish.",scene:"Five treasure words about {I} have been hidden around the house, and every one of them is locked tight — they open only when spoken aloud in Spanish. {C} is the one sent to find them. Setting the scene: hide sticky notes that pair a picture with the Spanish word, and rule that each note found must be used in a spoken sentence frame you supply before it counts as claimed.",goal:"Use all 5 words in spoken sentences during a treasure hunt.",mat:"5 sticky notes with picture + Spanish word, hidden.",steps:"Each found note must be used in a sentence frame you supply ('Veo un...' - I see a). Old words from past hunts can resurface as bonus treasure (spaced review, disguised).",easy:"Echo the word in the frame.",hard:"They build the sentence solo and add one adjective.",coach:"Prep: make 5 sticky notes, each with a little picture plus the Spanish word, and hide them around the room. Good words: el barco (boat), la isla (island), el mapa (map), el pez (fish), el sol (sun). Step 1 - teach the frame out loud: 'Veo un...' means 'I see a...' - say it, {C} echoes. Step 2 - each note they find must be used in the frame: found the fish -> 'Veo un pez.' Step 3 - celebrate each find like real treasure and keep going until all 5 are spoken in a sentence. Rough pronunciation: 'Veo' = VEH-oh, 'pez' = pess, 'isla' = EES-lah, 'barco' = BAR-koh. If stuck: point at the picture and say the full sentence first, then have them repeat it - saying it counts as the win, building it solo is the bonus."}],
 speaking:[
  {t:"The {I} Briefing",hook:"Headquarters needs a 1-minute briefing on {I}. Expert: {C}. Audience: the family.",scene:"A request has come down from headquarters: a one-minute briefing on {I}, delivered by the one expert they trust on the subject — {C} — to the assembled audience of the family. Setting the scene: prep three points together (they already know this topic, so the confidence is pre-loaded), rehearse once to a stuffed animal, then deliver it live at dinner; applause is mandatory.",goal:"Deliver a tiny talk: stand, say 3 things, take 1 question.",mat:"A 'podium' (chair/box), optional drawing as the visual aid.",steps:"Prep 3 points together (they know this topic - confidence is pre-loaded). Rehearse once to a stuffed animal, then live at dinner. Applause is mandatory.",easy:"Show-and-tell one object, say 2 things about it.",hard:"90 seconds, opens with a question to the audience, handles 2 questions."}],
 conflict:[
- {t:"Crew Dispute at {I} Base",hook:"Two crew members (stuffed animals/minifigs) both want the same {I} job. Captain {C} must settle it fairly.",scene:"Trouble has broken out at {I} base: two crew members both want the very same job, and tempers are climbing fast. Captain {C} is called in to settle it fairly before it splits the crew. Setting the scene: you voice both sides and make it a little funny, let {C} hear each one out and find a solution, then name the move that worked — 'taking turns,' 'trading,' 'listening first' — so it's ready to use for real next time.",goal:"Role-play the dispute to a fair solution; name the trick that worked.",mat:"Two characters, the disputed thing.",steps:"You voice both sides (make it funny). {C} hears both, asks each what they want, finds a solution. Then name the move ('taking turns', 'trading', 'listening first'). Quietly revisit the move next real conflict.",easy:"Offer two solutions, they pick the fairer one and say why.",hard:"A harder case: both are RIGHT in some way. And: 'what would you do if YOU were one of them?'"}],
+ {t:"Crew Dispute at {I} Base",hook:"Two crew members (stuffed animals/minifigs) both want the same {I} job. Captain {C} must settle it fairly.",scene:"Trouble has broken out at {I} base: two crew members both want the very same job, and tempers are climbing fast. Captain {C} is called in to settle it fairly before it splits the crew. Setting the scene: you voice both sides and make it a little funny, let {C} hear each one out and find a solution, then name the move that worked — 'taking turns,' 'trading,' 'listening first' — so it's ready to use for real next time.",goal:"Role-play the dispute to a fair solution; name the trick that worked.",mat:"Two characters, the disputed thing.",steps:"You voice both sides (make it funny). {C} hears both, asks each what they want, finds a solution. Then name the move ('taking turns', 'trading', 'listening first'). Quietly revisit the move next real conflict.",easy:"Offer two solutions, they pick the fairer one and say why.",hard:"A harder case: both are RIGHT in some way. And: 'what would you do if YOU were one of them?'",coach:"Grab two stuffed animals or minifigures to be the two crew members. Step 1 - you voice both, a little dramatic and funny: 'I had the {I} job first!' / 'No, it was mine!' Step 2 - hand it to {C}: 'Captain, settle it fairly.' Let them ask each side what they actually want. Step 3 - when they land on a solution, name the move out loud: 'You had them take turns - that's a real captain's trick.' The naming is the whole lesson, so do that part even if you supply the words. If stuck: offer two fair options and let them pick which is fairer and why ('should they take turns, or each take a different job?')."}],
 courage:[
  {t:"The Brave Thing",hook:"The Society awards the Lantern Badge for one brave thing: something hard {C} chooses to try today.",scene:"The Society reserves its Lantern Badge for a single kind of act: a brave thing, freely chosen — something genuinely hard that {C} decides to try today. Setting the scene: offer two or three options and let {C} pick (the choosing is the whole engine), remind them that scared and brave happen at the very same time, and afterward — win or not — say it plainly: 'You tried the hard thing, and that IS the badge.'",goal:"Pick one just-hard-enough thing, try it, and notice the after-feeling.",mat:"Depends on the chosen thing (a high-ish slide, ordering at the counter, a hard puzzle, bike past the markers, head underwater).",steps:"THEY pick from 2-3 options (choice is the engine). Before: 'scared and brave happen at the same time - that is the whole trick.' After, win or not: 'You tried the hard thing. That IS the badge.' Log what they say.",easy:"A smaller slice of the same brave thing.",hard:"They set next week's brave thing themselves."}],
 finlit:[
- {t:"The {I} Treasury",hook:"The crew earned coins from the last expedition. Treasurer {C} must split them wisely.",scene:"The crew has come home from the last expedition with a purse of hard-earned coins, and now it falls to Treasurer {C} to decide what becomes of them — spend, save, or give. Setting the scene: tell the story of how the coins were earned, talk through wants versus needs versus helping others, and let {C} make the split and defend it; revisit the jars next time to watch the savings grow.",goal:"Split real or play money into spend / save / give and explain the choices.",mat:"Coins (real ones are more exciting), 3 jars or drawn chests.",steps:"Story: the crew earned 10 coins. What now? Talk through wants vs needs vs helping others. {C} splits and defends the split. Revisit the jars next mission - watching savings grow is the lesson.",easy:"Split 6 coins with your gentle suggestions.",hard:"Add a goal ('the spyglass costs 8 saved coins - how many weeks?')."}],
+ {t:"The {I} Treasury",hook:"The crew earned coins from the last expedition. Treasurer {C} must split them wisely.",scene:"The crew has come home from the last expedition with a purse of hard-earned coins, and now it falls to Treasurer {C} to decide what becomes of them — spend, save, or give. Setting the scene: tell the story of how the coins were earned, talk through wants versus needs versus helping others, and let {C} make the split and defend it; revisit the jars next time to watch the savings grow.",goal:"Split real or play money into spend / save / give and explain the choices.",mat:"Coins (real ones are more exciting), 3 jars or drawn chests.",steps:"Story: the crew earned 10 coins. What now? Talk through wants vs needs vs helping others. {C} splits and defends the split. Revisit the jars next mission - watching savings grow is the lesson.",easy:"Split 6 coins with your gentle suggestions.",hard:"Add a goal ('the spyglass costs 8 saved coins - how many weeks?').",coach:"Get real coins if you can (far more exciting than pretend) and set out 3 jars or drawn chests labelled Spend, Save, Give. Step 1 - tell the story: 'the crew earned 10 coins from the {I} expedition - Treasurer {C}, what should we do with them?' Step 2 - talk it through: what do we want, what do we need, who could we help? Step 3 - let {C} split the coins across the 3 jars and defend the split out loud - there is no single right answer, the reasoning is the point. Step 4 - keep the Save jar somewhere visible and revisit it next time to watch it grow. If stuck: start them off ('how about a few in each?') and ask just one 'why' question about one jar."}],
 entrep:[
  {t:"The {I} Shop",hook:"The Society marketplace opens Saturday. {C}'s {I} stand needs a plan.",scene:"The Society marketplace throws open its gates on Saturday, and {C} has been granted a prime spot for an {I} stand — if there's a solid plan ready in time. Setting the scene: decide together what to sell, what it costs to make, and the price; build the sign, rehearse the pitch, and if you're going for real, run it thirty minutes with the family as the very first customers.",goal:"Plan (or actually run) a tiny stand: product, price, sign, pitch.",mat:"Paper for the sign, the product (lemonade, drawings, rock collection, cookies).",steps:"Decide: what will you sell? what does it cost to make? what price? Make the sign, rehearse the pitch ('Public Speaking' crossover). If real: run it 30 minutes with family as first customers.",easy:"Family-only shop with play money.",hard:"Real mini-sale; afterward count: earnings minus costs = profit. Where does profit go? (Treasury crossover.)"}],
 thinking:[
- {t:"The Quartermaster Is Wrong",hook:"Scandal! The Quartermaster sent a claim about {I} that might be WRONG. {C} must check it.",scene:"Scandal in the map room: the Quartermaster has sent out a claim about {I} that might be flat wrong — and {C} is the only one willing to check it instead of simply taking it on faith. Setting the scene: read the claim aloud, ask 'how could we actually check this?', test or look it up together, then deliver the verdict formally — because even official scrolls can be wrong, and checking is the explorer's true superpower.",goal:"Test a claim instead of believing it; verdict with evidence.",mat:"A claim you invent - half-plausible, checkable ('heavier things always fall faster', 'all bugs have 6 legs').",steps:"Read the claim. Ask: how could we CHECK? Test/observe/look it up together. Verdict delivered formally. Lesson said out loud: 'even official scrolls can be wrong - checking is the explorer's superpower.'",easy:"Obviously-checkable claim, test it physically.",hard:"Add a peer-pressure twist: 'everyone in town believes it - does that make it true?'"},
- {t:"Two Maps Disagree",hook:"Two old maps of the {I} territory disagree. Which one should the crew trust?",scene:"Two old maps of the {I} territory have surfaced in the archive, and they flatly disagree — one of them is leading the crew the wrong way, and {C} must decide which to trust. Setting the scene: examine both together (which has more detail? whose maker was actually there?), then let {C} rule which to follow and say why; the reasoning is the entire mission.",goal:"Compare two sources, decide, and give a reason.",mat:"Two simple 'maps' or two short claims you draw up that conflict.",steps:"Examine both: which has more detail? Which maker was actually there? {C} rules which to trust and why. The why is the whole mission.",easy:"One map is clearly sloppier - spotting it counts.",hard:"Neither is fully right: the crew must combine them. 'What would make you change your mind?'"}]
+ {t:"The Quartermaster Is Wrong",hook:"Scandal! The Quartermaster sent a claim about {I} that might be WRONG. {C} must check it.",scene:"Scandal in the map room: the Quartermaster has sent out a claim about {I} that might be flat wrong — and {C} is the only one willing to check it instead of simply taking it on faith. Setting the scene: read the claim aloud, ask 'how could we actually check this?', test or look it up together, then deliver the verdict formally — because even official scrolls can be wrong, and checking is the explorer's true superpower.",goal:"Test a claim instead of believing it; verdict with evidence.",mat:"A claim you invent - half-plausible, checkable ('heavier things always fall faster', 'all bugs have 6 legs').",steps:"Read the claim. Ask: how could we CHECK? Test/observe/look it up together. Verdict delivered formally. Lesson said out loud: 'even official scrolls can be wrong - checking is the explorer's superpower.'",easy:"Obviously-checkable claim, test it physically.",hard:"Add a peer-pressure twist: 'everyone in town believes it - does that make it true?'",coach:"Step 1 - deliver a half-true claim with a straight face, and pick one you can actually check ('heavier things always fall faster,' 'all bugs have exactly six legs'). Step 2 - instead of correcting, ask: 'How could WE check that ourselves?' Step 3 - test it together right now - drop two objects, look closely at a real bug, or look it up. Step 4 - have {C} deliver the verdict formally, then say the lesson: 'even official scrolls can be wrong - checking is the explorer's superpower.' If stuck: narrow it to a yes/no test they can do with their hands this minute, so 'how do we check' has an obvious first move."},
+ {t:"Two Maps Disagree",hook:"Two old maps of the {I} territory disagree. Which one should the crew trust?",scene:"Two old maps of the {I} territory have surfaced in the archive, and they flatly disagree — one of them is leading the crew the wrong way, and {C} must decide which to trust. Setting the scene: examine both together (which has more detail? whose maker was actually there?), then let {C} rule which to follow and say why; the reasoning is the entire mission.",goal:"Compare two sources, decide, and give a reason.",mat:"Two simple 'maps' or two short claims you draw up that conflict.",steps:"Examine both: which has more detail? Which maker was actually there? {C} rules which to trust and why. The why is the whole mission.",easy:"One map is clearly sloppier - spotting it counts.",hard:"Neither is fully right: the crew must combine them. 'What would make you change your mind?'",coach:"Prep: make two simple maps of the {I} area that clearly disagree - one shows the treasure by the river, the other by the cave (or make one neat and one rushed and vague). Step 1 - lay both in front of {C}: 'Two maps, and they don't agree - which does the crew trust?' Step 2 - guide the questions: which has more detail? which mapmaker was actually there? Step 3 - {C} rules which to trust and says WHY - the why is the whole mission. If stuck: make the difference obvious (one map is clearly sloppy and missing things), then ask 'what makes you trust that one more?'"}]
 };
 
 /* ==SECTION:GENERATOR== */
@@ -413,7 +414,7 @@ function generateMission(opts){
   var m={
     id:uid(), date:opts.date||todayYMD(), subject:sid, interest:iv.name, curiosity:iv.curiosity,
     title:fill(tmpl.t,iv.name), hook:fill(tmpl.hook,iv.name), scene:fill(tmpl.scene||tmpl.hook,iv.name), goal:fill(tmpl.goal,iv.name),
-    mat:fill(tmpl.mat,iv.name), steps:fill(tmpl.steps,iv.name),
+    mat:fill(tmpl.mat,iv.name), steps:fill(tmpl.steps,iv.name), coach:fill(tmpl.coach||"",iv.name),
     variant:diff, easy:fill(tmpl.easy,iv.name), hard:fill(tmpl.hard,iv.name),
     fallback:pick(FALLBACKS), reflect:pick(REFLECTS),
     minutes:mins, status:"planned", reset:!!opts.reset, feedback:null
@@ -439,6 +440,20 @@ function sceneBlock(scene,isPrint){
   if(sp[1]) c+='<div class="small muted scene-stage"><b>Setting the scene:</b> '+esc(sp[1])+'</div>';
   return c;
 }
+/* Explicit parent run-script (Michel-Thomas scaffolding); split on the "If stuck:" marker.
+   Lets a non-fluent parent run a mission cold. Empty coach renders nothing. */
+function coachBlock(coach,isPrint){
+  var t=String(coach||""); if(!t) return '';
+  var i=t.indexOf("If stuck:"), main=i<0?t.trim():t.slice(0,i).trim(), stuck=i<0?"":t.slice(i+"If stuck:".length).trim();
+  if(isPrint){
+    var h='<p><b>Running it, step by step:</b> '+esc(main)+'</p>';
+    if(stuck) h+='<p style="font-size:12px; color:#6F6757;"><b>If they get stuck:</b> '+esc(stuck)+'</p>';
+    return h;
+  }
+  var c='<div class="small scene"><b>Running it, step by step:</b> '+esc(main)+'</div>';
+  if(stuck) c+='<div class="small muted scene-stage"><b>If they get stuck:</b> '+esc(stuck)+'</div>';
+  return c;
+}
 function missionCardHTML(m,withActions){
   var sb=subj(m.subject);
   var html='<div class="mission '+m.status+'" id="m_'+m.id+'">'
@@ -450,6 +465,7 @@ function missionCardHTML(m,withActions){
     +'<div class="small"><b>Goal:</b> '+esc(m.goal)+'</div>'
     +'<div class="small"><b>Materials:</b> '+esc(m.mat)+'</div>'
     +'<div class="small"><b>How it goes:</b> '+esc(m.steps)+'</div>'
+    +coachBlock(m.coach,false)
     +'<div class="small"><b>Easier dial:</b> '+esc(m.easy)+' &nbsp; <b>Harder dial:</b> '+esc(m.hard)+'</div>'
     +'<div class="small"><b>If it wobbles:</b> '+esc(m.fallback)+'</div>'
     +'<div class="small"><b>Reflection (optional, one only):</b> '+esc(m.reflect)+'</div>';
@@ -489,6 +505,7 @@ function printMission(id){
     +'<p><b>Your goal:</b> '+esc(m.goal)+'</p>'
     +'<p><b>Gear:</b> '+esc(m.mat)+'</p>'
     +'<p>'+esc(m.steps)+'</p>'
+    +coachBlock(m.coach,true)
     +'<p style="margin-top:18px; font-size:12px;">Easier: '+esc(m.easy)+'<br>Harder: '+esc(m.hard)+'</p>'
     +'<p style="margin-top:14px; letter-spacing:.18em; font-size:11px; font-family:\'Bricolage Grotesque\',sans-serif;">— THE QUARTERMASTER</p></div>';
   $("printArea").style.display="block"; window.print(); $("printArea").style.display="none";
@@ -499,7 +516,7 @@ function copyAIPrompt(id){
   var p="You are generating a learning mission for a parent-led family learning system. Rules: parent is the guide; child never sees metrics; story invites, never bribes; effort praise only; no fear/shame/urgency/comparison; ~80% success rate; immediate feedback through the activity itself; one skill target wrapped in the child's interest; 9 parts: hook, hidden skill target, clear goal, materials (<=5 min prep, physical-first), 1-2 min playful retrieval opener, core loop (generation-first, scaffolds fade), easier+harder variants, graceful fallback, closer with one reflection question.\n\n"
    +"Child: "+(S.profile.childName||"(name)")+", age "+S.profile.age+". Interests: "+ints+". Session: "+(m?m.minutes:S.profile.prefs.sessionMin)+" minutes. "
    +(m? "Subject: "+subj(m.subject).name+". Interest wrapper: "+m.interest+". Current variant level: "+m.variant+"." : "")
-   +"\n\nGenerate one complete mission card following all rules, richer and more specific than a template could be.";
+   +"\n\nGenerate one complete mission card following all rules, richer and more specific than a template could be. Write it so a parent who is NOT fluent in this subject can run it cold, with zero prep: include a step-by-step run script with the exact words for the parent to say, one or two sample child responses, and a short 'if they get stuck' note. For a language mission, give the actual target words/phrases and rough pronunciation.";
   navigator.clipboard.writeText(p).then(function(){alert("AI prompt copied — paste it into Claude (or any assistant), review the result, then run it as a mission.");});
 }
 /* ---- feedback + iteration engine ---- */
@@ -712,12 +729,16 @@ function doNewMission(){
 function quickLogDialog(){
   var chips=SUBJECTS.map(function(sb){return '<span class="chip" data-v="'+sb.id+'" onclick="this.classList.toggle(\'on\')">'+esc(sb.name)+'</span>';}).join("");
   openModal('<div class="steps">log other learning</div><h2>It all counts</h2>'
-   +'<p class="muted small">Library trips, museum days, an hour of free reading, swim practice — log it so the ledger and the heat map see the whole picture.</p>'
+   +'<p class="muted small">Library trips, museum days, an hour of free reading, a real-world project — log it so the ledger and heat map see the whole picture. Optionally generate a standards write-up for your portfolio.</p>'
+   +'<label>What did you do? (a sentence or two)</label><textarea id="qlDesc" placeholder="e.g., measured the living room and picked a rug that fits; talked about color and size"></textarea>'
    +'<label>Which subject(s) did it touch? (pick one or more)</label><div class="chips" id="qlSubj">'+chips+'</div>'
    +'<label>Total minutes</label><input type="number" id="qlMin" value="30">'
    +'<label>Date</label><input type="date" id="qlDate" value="'+todayYMD()+'">'
-   +'<label>Note (feeds the quarterly report)</label><input type="text" id="qlNote" placeholder="e.g., library visit — picked 4 dinosaur books">'
-   +'<p class="muted small" style="margin-top:6px">Minutes are split evenly across the subjects you pick, so each one gets credit toward the month and the quarter.</p>'
+   +'<p class="muted small" style="margin-top:6px">Minutes are split evenly across the subjects you pick, so each gets credit toward the month and quarter.</p>'
+   +'<div class="card" style="background:var(--parchment-deep); margin-top:10px;"><h3 style="margin-top:0">Standards write-up <span class="muted small">(optional — for a portfolio / 90-day report)</span></h3>'
+   +'<p class="muted small">Generate a subject-by-subject skills analysis with <b>suggested</b> standards for something you already did. Always parent-reviewed — verify before you file it.</p>'
+   +'<button class="btn sm ghost" onclick="copyStandardsPrompt()">Copy standards-analysis prompt</button>'
+   +'<label style="margin-top:8px">Paste the write-up back here to save it with this activity</label><textarea id="qlAnalysis" placeholder="(optional — paste the standards write-up here)"></textarea></div>'
    +'<div style="margin-top:12px; display:flex; gap:8px;"><button class="btn amber" onclick="doQuickLog()">Log it</button>'
    +'<button class="btn ghost" onclick="closeModal()">Cancel</button></div>');
 }
@@ -725,10 +746,33 @@ function doQuickLog(){
   var on=$("qlSubj").querySelectorAll(".chip.on"), ids=[];
   for(var i=0;i<on.length;i++) ids.push(on[i].getAttribute("data-v"));
   if(ids.length===0){alert("Pick at least one subject so the learning gets credited.");return;}
-  var date=$("qlDate").value||todayYMD(), total=+$("qlMin").value||0, note=$("qlNote").value;
+  var date=$("qlDate").value||todayYMD(), total=+$("qlMin").value||0;
+  var desc=($("qlDesc")&&$("qlDesc").value)||"", analysis=($("qlAnalysis")&&$("qlAnalysis").value)||"";
   var per=Math.round(total/ids.length);
-  ids.forEach(function(id){ S.extraLog.push({date:date, minutes:per, subject:id, note:note}); });
+  ids.forEach(function(id){ S.extraLog.push({date:date, minutes:per, subject:id, note:desc}); });
+  if(desc||analysis){
+    S.activities=S.activities||[];
+    S.activities.push({id:uid(), date:date, description:desc, subjects:ids.slice(), minutes:total, analysis:analysis});
+  }
   save(); closeModal(); renderView();
+}
+/* Retrospective, guardrailed standards-analysis prompt built from the current log dialog.
+   Parent-side only; copy-to-Claude keeps it local-first (no API key). */
+function copyStandardsPrompt(){
+  var on=$("qlSubj").querySelectorAll(".chip.on"), names=[];
+  for(var i=0;i<on.length;i++){var sb=subj(on[i].getAttribute("data-v")); if(sb)names.push(sb.name);}
+  var desc=($("qlDesc")&&$("qlDesc").value)||"(fill in what you did above first)";
+  var mins=+($("qlMin").value)||0, age=S.profile.age||"", state=S.profile.usState||"our state";
+  var p="You are helping a homeschooling parent document a learning activity their child ALREADY did, for a portfolio / progress report. This is retrospective and descriptive: analyze what the activity naturally touched — do NOT prescribe new tasks or turn it into a lesson plan.\n\n"
+   +"Activity: "+desc+"\n"
+   +"Child age: "+age+".  Duration: "+mins+" minutes.  Subject areas the parent tagged: "+(names.join(", ")||"(none picked)")+".  Home state: "+state+".\n\n"
+   +"Write a short, warm, honest skills analysis:\n"
+   +"- Group by subject. Under each, 2-4 plain-language bullets naming the real skill the activity exercised.\n"
+   +"- Where a bullet genuinely aligns to a standard, cite it (CCSS, NGSS, or National Core Arts) — but ONLY where it clearly fits, and keep it grade-honest for a "+age+"-year-old. Do NOT inflate, pad, or cite standards that are a stretch; if something does not map cleanly, describe the skill without a code.\n"
+   +"- Put this line at the top: 'Suggested alignments — parent-reviewed; verify with your association/state.'\n"
+   +"- End with one or two optional 'try this next' ideas.\n"
+   +"Keep the voice calm and field-journal warm, not institutional. No scores, grades, or child-facing language.";
+  navigator.clipboard.writeText(p).then(function(){alert("Standards-analysis prompt copied — paste it into Claude, review the result, then paste it back into the box and Log it.");},function(){alert("Could not copy automatically. Re-type the activity into Claude, then paste the result back.");});
 }
 function viewWeek(){
   var ws=weekStart(todayYMD());
@@ -953,7 +997,20 @@ function exportReport(qid){
 
   r+="PORTFOLIO\n";
   r+="  Work samples / mission records retained this period: "+totalSessions+" logged session(s).\n";
-  r+="  Lantero mission records and printed mission scrolls form the portfolio index.\n\n";
+  r+="  Lantero mission records and printed mission scrolls form the portfolio index.\n";
+  var acts=(S.activities||[]).filter(function(a){return a.date>=q.start&&a.date<=q.end;})
+    .sort(function(a,b){return a.date.localeCompare(b.date);});
+  if(acts.length){
+    r+="\n  DOCUMENTED ACTIVITIES (with suggested standard alignments):\n";
+    acts.forEach(function(a){
+      var subs=(a.subjects||[]).map(function(id){var s=subj(id);return s?s.name:id;}).join(", ");
+      r+="\n  • "+fmtDate(a.date)+" — "+(a.description||"(activity)")+(subs?"  ["+subs+"]":"")+"\n";
+      if(a.analysis){ a.analysis.split("\n").forEach(function(ln){ r+="      "+ln+"\n"; }); }
+      else { r+="      (no standards write-up attached)\n"; }
+    });
+    r+="\n  Suggested standard alignments above are parent-reviewed — verify with your association/state before filing. Not legal advice.\n";
+  }
+  r+="\n";
 
   r+="GOALS\n";
   r+="  Goals for this period: "+(q.goals||"—")+"\n";
